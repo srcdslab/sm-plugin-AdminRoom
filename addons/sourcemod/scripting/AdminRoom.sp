@@ -48,6 +48,7 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 
+	RegAdminCmd("sm_adminroom_reloadcfg", Command_ReloadConfig, ADMFLAG_GENERIC, "Reload both map and keyword configs");
 	RegAdminCmd("sm_adminroom", Command_AdminRoom, ADMFLAG_CHANGEMAP, "Teleport anyone to the admin room");
 	RegAdminCmd("sm_stage", Command_Stage, ADMFLAG_GENERIC, "Change the map stage");
 
@@ -84,6 +85,15 @@ public void OnClientDisconnect(int client)
 	isStuck[client] = false;
 	StuckCheck[client] = false;
 	menuHandle[client] = null; 
+}
+
+public Action Command_ReloadConfig(int client, int argc)
+{
+	g_bLateLoad = true;
+	OnMapStart();
+
+	ReplyToCommand(client, "[SM] AdminRoom configs reloaded.");
+	return Plugin_Handled;
 }
 
 public Action Command_Stage(int client, int argc)
