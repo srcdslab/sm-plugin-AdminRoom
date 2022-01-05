@@ -4,8 +4,8 @@ Teleport to admin rooms and change stages
 
 ## Commands
 
-sm_adminroom - Teleport anyone to the admin room
-sm_stage - Change the map stage
+- sm_adminroom - Teleport anyone to the admin room
+- sm_stage - Change the map stage
 
 ## Configuration
 
