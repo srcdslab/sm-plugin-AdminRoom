@@ -6,6 +6,7 @@ Teleport to admin rooms and change stages
 
 - sm_adminroom - Teleport anyone to the admin room
 - sm_stage - Change the map stage
+- sm_adminroom_reloadcfg - Reload both map and keyword configs
 
 ## Configuration
 
