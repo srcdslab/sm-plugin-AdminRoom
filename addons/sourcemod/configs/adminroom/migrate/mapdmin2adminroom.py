@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 import io
 import getopt
 
@@ -57,8 +58,23 @@ def mapadmin2adminroom(input_file):
             output_file = "{mapsfolder}/{mapname}.cfg".format(mapsfolder=outputfolder, mapname=mapname)
 
         if "ze_" not in line and not "ZE_" in line and startwritting == True:
-            content = content + line[1:] + '\n'
+            if "adminroom" in line:
+                pos = [m.start() for m in re.finditer('\"', line)]
+                origin = line[pos[2]:]
+                origin = origin[1:len(origin)-1]
+                adminrooms = '''    "adminrooms"
+    {{
+        "0"
+        {{
+            "name"      "Admin Room"
+            "origin"    "{origin}"
+        }}
+    }}'''.format(origin=origin)
+                line = adminrooms
+            else:
+                line = line[1:]
 
+            content = content + line + '\n'
 
 def print_helper():
     print('mapdmin2adminroom.py -i <input> inputfile')
