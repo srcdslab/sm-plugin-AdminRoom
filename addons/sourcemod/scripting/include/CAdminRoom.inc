@@ -27,12 +27,12 @@ methodmap CAdminRoomLocation < Basic
 		this.SetString("sName", buffer);
 	}
 
-	public bool GetOrigin(float[3] vector)
+	public bool GetOrigin(float vector[3])
 	{
 		return this.GetArray("fOrigin", vector, sizeof(vector));
 	}
 
-	public void SetOrigin(const float[3] vector)
+	public void SetOrigin(const float vector[3])
 	{
 		this.SetArray("fOrigin", vector, sizeof(vector));
 	}
