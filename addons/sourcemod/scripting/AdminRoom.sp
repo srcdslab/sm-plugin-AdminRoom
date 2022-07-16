@@ -32,9 +32,9 @@ bool g_bLateLoad = false;
 public Plugin myinfo =
 {
 	name = "Admin Room",
-	author = "IT-KILLER, BotoX, maxime1907",
+	author = "IT-KILLER, BotoX, maxime1907, .Rushaway",
 	description = "Teleport to admin rooms and change stages.",
-	version = "2.0",
+	version = "2.1.0",
 	url = ""
 };
 
@@ -48,9 +48,9 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 
-	RegAdminCmd("sm_adminroom_reloadcfg", Command_ReloadConfig, ADMFLAG_GENERIC, "Reload both map and keyword configs");
-	RegAdminCmd("sm_adminroom", Command_AdminRoom, ADMFLAG_CHANGEMAP, "Teleport anyone to the admin room");
-	RegAdminCmd("sm_stage", Command_Stage, ADMFLAG_GENERIC, "Change the map stage");
+	RegAdminCmd("sm_adminroom_reloadcfg", Command_ReloadConfig, ADMFLAG_CONFIG, "Reload both map and keyword configs");
+	RegAdminCmd("sm_adminroom", Command_AdminRoom, ADMFLAG_BAN, "Teleport anyone to the admin room");
+	RegAdminCmd("sm_stage", Command_Stage, ADMFLAG_BAN, "Change the map stage");
 
 	HookEvent("round_start", EventRoundStart, EventHookMode_PostNoCopy);
 }
@@ -92,7 +92,8 @@ public Action Command_ReloadConfig(int client, int argc)
 	g_bLateLoad = true;
 	OnMapStart();
 
-	ReplyToCommand(client, "[SM] AdminRoom configs reloaded.");
+	CReplyToCommand(client, "%s AdminRoom configs reloaded.", TAG_COLOR);
+	LogAction(client, -1, "[AdminRoom] %L Reloaded the configs files.", client);
 	return Plugin_Handled;
 }
 
@@ -103,19 +104,19 @@ public Action Command_Stage(int client, int argc)
 
 	if (!g_AdminRoom.bEnabled)
 	{
-		ReplyToCommand(client, "[SM] The current map is not supported.");
+		CReplyToCommand(client, "%s The current map is not supported.", TAG_COLOR);
 		return Plugin_Handled;
 	}
 
 	if (!cStages || cStages.Length <= 0)
 	{
-		ReplyToCommand(client, "[SM] The current map either does not have stages or is incorrectly configured.");
+		CReplyToCommand(client, "%s The current map either does not have stages or is incorrectly configured.", TAG_COLOR);
 		return Plugin_Handled;
 	}
 
 	if (argc < 1)
 	{
-		ReplyToCommand(client, "[SM] Available stages:");
+		CReplyToCommand(client, "%s Available stages :", TAG_COLOR);
 
 		for (int i = 0; i < cStages.Length; i++)
 		{
@@ -142,7 +143,7 @@ public Action Command_Stage(int client, int argc)
 			char sName[64];
 			cStage.GetName(sName, sizeof(sName));
 
-			ReplyToCommand(client, "%s: %s", sName, sTriggers);
+			CReplyToCommand(client, "{olive}%s : {default}%s", sName, sTriggers);
 		}
 
 		return Plugin_Handled;
@@ -181,7 +182,7 @@ public Action Command_Stage(int client, int argc)
 		char sName[64];
 		cStage.GetName(sName, sizeof(sName));
 
-		ReplyToCommand(client, "Triggering \"%s\"", sName);
+		CReplyToCommand(client, "%s Triggering \"{olive}%s{default}\".", TAG_COLOR, sName);
 
 		ArrayList cActions;
 		if (cStage.GetActions(cActions))
@@ -196,7 +197,7 @@ public Action Command_Stage(int client, int argc)
 				char sEvent[64];
 				cAction.GetEvent(sEvent, sizeof(sEvent));
 
-				ReplyToCommand(client, "Firing \"%s\"", sIdentifier);
+				CReplyToCommand(client, "%s Firing \"{olive}%s{default}\".", TAG_COLOR, sIdentifier);
 
 				int entity = INVALID_ENT_REFERENCE;
 				while((entity = FindEntityByTargetname(entity, sIdentifier, "*")) != INVALID_ENT_REFERENCE)
@@ -207,7 +208,7 @@ public Action Command_Stage(int client, int argc)
 		}
 
 		if (client > 0)
-			CShowActivity2(client, "{green}[SM] ", "{default}Changed the stage to {green}%s{default}.", sName);
+			CShowActivity2(client, "{green}[SM] {olive}", "{default}Changed the stage to {green}%s{default}.", sName);
 		else
 			ShowActivity2(client, "[SM] ", "Changed the stage to %s.", sName);
 
@@ -216,7 +217,7 @@ public Action Command_Stage(int client, int argc)
 		return Plugin_Handled;
 	}
 
-	ReplyToCommand(client, "[SM] Invalid stage %s", sArg);
+	CReplyToCommand(client, "%s Invalid stage %s", TAG_COLOR, sArg);
 	return Plugin_Handled;
 }
 
@@ -224,15 +225,50 @@ public Action Command_AdminRoom(int client, int argc)
 {
 	if (!client)
 	{
-		ReplyToCommand(client, "[SM] Console cannot be teleported.");
+		CReplyToCommand(client, "%s Console cannot be teleported.", TAG_COLOR);
 		return Plugin_Handled;
 	}
 
-	ArrayList cAdminRoomLocations;
-	if ((g_AdminRoom.GetAdminRoomLocations(cAdminRoomLocations) && cAdminRoomLocations.Length > 0) || g_cAdminRoomLocationsDetected.Length > 0)
-		Menu_AdminRoom(client);
+	if(argc > 1)
+	{
+		ReplyToCommand(client, "[SM] Usage: sm_adminroom [#userid|name]");
+		return Plugin_Handled;
+	}
+
+	char sArgs[64];
+	char sTargetName[MAX_TARGET_LENGTH];
+	int iTargets[MAXPLAYERS];
+	int iTargetCount;
+	bool bIsML;
+
+	if(argc == 1)
+		GetCmdArg(1, sArgs, sizeof(sArgs));
 	else
-		ReplyToCommand(client, "[SM] Unable to detect any admin room.");
+		strcopy(sArgs, sizeof(sArgs), "@me");
+
+	if((iTargetCount = ProcessTargetString(sArgs, client, iTargets, MAXPLAYERS, COMMAND_FILTER_ALIVE, sTargetName, sizeof(sTargetName), bIsML)) <= 0)
+	{
+		ReplyToTargetError(client, iTargetCount);
+		return Plugin_Handled;
+	}
+
+	if(iTargetCount <= 1)
+	{
+		for(int i = 0; i < iTargetCount; i++)
+		{
+			ArrayList cAdminRoomLocations;
+			if ((g_AdminRoom.GetAdminRoomLocations(cAdminRoomLocations) && cAdminRoomLocations.Length > 0) || g_cAdminRoomLocationsDetected.Length > 0)
+			{
+				Menu_AdminRoom(iTargets[i]);
+				CReplyToCommand(client, "%s AdminRoom Menu has been sent to {olive}%N{default}.", TAG_COLOR, iTargets);
+				LogAction(client, client, "\"%L\" printed the AdminRoom Menu to \"%L\".", client, iTargets);
+			}
+			else
+				CReplyToCommand(client, "%s Unable to detect any admin room.", TAG_COLOR);
+		}
+	}
+	else
+		CReplyToCommand(client, "%s Only one target can be reached.", TAG_COLOR);
 
 	return Plugin_Handled;
 }
@@ -278,7 +314,7 @@ void Menu_AdminRoom(int client)
 		}
 	}
 
-	menu.Display(client, MENU_TIME_FOREVER);
+	menu.Display(client, 20);
 }
 
 public int MenuHandler_AdminRoom(Menu menu, MenuAction action, int param1, int param2)
@@ -326,7 +362,7 @@ public int MenuHandler_AdminRoom(Menu menu, MenuAction action, int param1, int p
 
 				GoToEntity(param1, cAdminRoomLocation);
 			}
-			menu.DisplayAt(param1, GetMenuSelectionPosition(), MENU_TIME_FOREVER);
+			menu.DisplayAt(param1, GetMenuSelectionPosition(), 20);
 			return 0;
 		}
 		case MenuAction_DrawItem:
@@ -787,9 +823,9 @@ stock void GoToEntity(int client, CAdminRoomLocation cAdminRoomLocation)
 
 	TeleportEntity(client, entityposition, NULL_VECTOR, NULL_VECTOR);
 
-	CShowActivity2(client, "{green}[SM] ", "{default}Teleported {green}%N{default} to the adminroom.", client);
+	CShowActivity2(client, "{green}[SM] {olive}", "{default}has been teleported to the adminroom.");
 
-	LogAction(client, client, "\"%L\" teleported \"%L\" to the adminroom.", client, client);
+	LogAction(client, -1, "\"%L\" teleported himself to the adminroom.", client);
 
 	CreateTimer(0.2, Timer_StuckFix, client, TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -804,6 +840,7 @@ stock void GetOut(int client)
 
 	TeleportEntity(client, g_fPlayerOrigin[client], NULL_VECTOR, NULL_VECTOR);
 	CPrintToChat(client, "%s You have left the admin room.", TAG_COLOR);
+	LogAction(client, -1, "\"%L\" teleported himself OUT of the adminroom.", client);
 }
 
 /*
