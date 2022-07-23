@@ -12,7 +12,7 @@ methodmap CAdminRoomLocation < Basic
 		Basic myclass = new Basic();
 
 		myclass.SetString("sName", "");
-		myclass.SetString("fOrigin", "");
+		myclass.SetArray("fOrigin", {0, 0, 0}, 3);
 
 		return view_as<CAdminRoomLocation>(myclass);
 	}

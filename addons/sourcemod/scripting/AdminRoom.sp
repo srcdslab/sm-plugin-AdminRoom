@@ -3,7 +3,7 @@
 #include <regex>
 #include <multicolors>
 #include <outputinfo>
-#include <CAdminRoom>
+#include <AdminRoom>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -13,11 +13,11 @@
 #define STEP 4.0
 #define RADIUSSIZE 40.0
 
-int menuSelected[MAXPLAYERS+1];
-Menu menuHandle[MAXPLAYERS+1];
+int menuSelected[MAXPLAYERS+1] = { 0, ... };
+Menu menuHandle[MAXPLAYERS+1] = { null, ... };
 
 // anti-stuck
-bool isStuck[MAXPLAYERS+1];
+bool isStuck[MAXPLAYERS+1] = { false, ... };
 int StuckCheck[MAXPLAYERS+1] = {0, ...};
 float Ground_Velocity[3] = {0.0, 0.0, -300.0};
 
@@ -57,11 +57,11 @@ public void OnPluginStart()
 
 public void EventRoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	DetectAdminRoomLocations();
 	for (int client = 1; client <= MaxClients; client++)
 	{
 		OnClientDisconnect(client);
 	}
+	DetectAdminRoomLocations();
 }
 
 public void OnMapStart()
@@ -693,8 +693,8 @@ stock void DetectAdminRoomLocations()
 				GetEntPropVector(entityNear, Prop_Send, "m_vecOrigin", entityPositionNear);
 				distance = GetVectorDistance(entityPosition, entityPositionNear, false);
 				if (distance < 500.00)
-				{	
-					if(POSITIVE(entityPosition[0] - entityPositionNear[0]) < 40.00
+				{
+					if (POSITIVE(entityPosition[0] - entityPositionNear[0]) < 40.00
 					|| POSITIVE(entityPosition[1] - entityPositionNear[1]) < 40.00
 					|| POSITIVE(entityPosition[2] - entityPositionNear[2]) < 40.00)
 					{
