@@ -57,6 +57,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_stage", Command_Stage, ADMFLAG_BAN, "Change the map stage");
 
 	HookEvent("round_start", EventRoundStart, EventHookMode_PostNoCopy);
+	AutoExecConfig(true);
 }
 
 public void EventRoundStart(Event event, const char[] name, bool dontBroadcast)
