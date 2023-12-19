@@ -4,6 +4,7 @@
 #include <multicolors>
 #include <outputinfo>
 #include <AdminRoom>
+#include <utilshelper.inc>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -27,6 +28,7 @@ ArrayList g_aAutoDetect = null;
 
 CAdminRoom g_AdminRoom = null;
 
+ConVar g_cvLowercase;
 bool g_bLateLoad = false;
 
 public Plugin myinfo =
@@ -34,7 +36,7 @@ public Plugin myinfo =
 	name = "Admin Room",
 	author = "IT-KILLER, BotoX, maxime1907, .Rushaway",
 	description = "Teleport to admin rooms and change stages.",
-	version = "2.1.0",
+	version = "2.1.1",
 	url = ""
 };
 
@@ -47,6 +49,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
+
+	g_cvLowercase = CreateConVar("sm_adminroom_lowercase", "0", "If enabled, the map name will be lowercase before loading the config file.");
 
 	RegAdminCmd("sm_adminroom_reloadcfg", Command_ReloadConfig, ADMFLAG_CONFIG, "Reload both map and keyword configs");
 	RegAdminCmd("sm_adminroom", Command_AdminRoom, ADMFLAG_BAN, "Teleport anyone to the admin room");
@@ -64,10 +68,10 @@ public void EventRoundStart(Event event, const char[] name, bool dontBroadcast)
 	DetectAdminRoomLocations();
 }
 
-public void OnMapStart()
+public void OnConfigsExecuted()
 {
-	LoadMapConfig("configs/adminroom/maps");
-	LoadConfig("configs/adminroom/adminroom.cfg");
+	LoadMapConfig();
+	LoadConfig();
 
 	if (g_bLateLoad)
 	{
@@ -90,7 +94,7 @@ public void OnClientDisconnect(int client)
 public Action Command_ReloadConfig(int client, int argc)
 {
 	g_bLateLoad = true;
-	OnMapStart();
+	OnConfigsExecuted();
 
 	CReplyToCommand(client, "%s AdminRoom configs reloaded.", TAG_COLOR);
 	LogAction(client, -1, "[AdminRoom] %L Reloaded the configs files.", client);
@@ -246,7 +250,7 @@ public Action Command_AdminRoom(int client, int argc)
 	else
 		strcopy(sArgs, sizeof(sArgs), "@me");
 
-	if((iTargetCount = ProcessTargetString(sArgs, client, iTargets, MAXPLAYERS, COMMAND_FILTER_ALIVE, sTargetName, sizeof(sTargetName), bIsML)) <= 0)
+	if((iTargetCount = ProcessTargetString(sArgs, client, iTargets, MAXPLAYERS, COMMAND_FILTER_ALIVE | COMMAND_FILTER_NO_IMMUNITY, sTargetName, sizeof(sTargetName), bIsML)) <= 0)
 	{
 		ReplyToTargetError(client, iTargetCount);
 		return Plugin_Handled;
@@ -446,7 +450,7 @@ stock void InitAdminRoom()
 	g_AdminRoom = new CAdminRoom();
 }
 
-stock void LoadConfig(const char[] sConfigFilePath)
+stock void LoadConfig()
 {
 	if (g_aAutoDetect != null)
 		delete g_aAutoDetect;
@@ -454,7 +458,7 @@ stock void LoadConfig(const char[] sConfigFilePath)
 	g_aAutoDetect = new ArrayList();
 
 	char sConfigFile[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sConfigFile, sizeof(sConfigFile), "%s", sConfigFilePath);
+	BuildPath(Path_SM, sConfigFile, sizeof(sConfigFile), "configs/adminroom/adminroom.cfg");
 
 	if (!FileExists(sConfigFile))
 	{
@@ -489,25 +493,40 @@ stock void LoadConfig(const char[] sConfigFilePath)
 	delete kvConfig;
 }
 
-stock void LoadMapConfig(const char[] sConfigFolder)
+stock void LoadMapConfig()
 {
 	InitAdminRoom();
 
 	char sMapName[PLATFORM_MAX_PATH];
 	GetCurrentMap(sMapName, sizeof(sMapName));
 
-	char sConfigFile[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sConfigFile, sizeof(sConfigFile), "%s/%s.cfg", sConfigFolder, sMapName);
+	if (g_cvLowercase.BoolValue) StringToLowerCase(sMapName);
 
-	if (!FileExists(sConfigFile))
-		return;
+	char sConfigFile[PLATFORM_MAX_PATH], sConfigFile_override[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sConfigFile, sizeof(sConfigFile), "configs/adminroom/maps/%s.cfg", sMapName);
+	BuildPath(Path_SM, sConfigFile_override, sizeof(sConfigFile_override), "configs/adminroom/maps/%s_override.cfg", sMapName);
 
 	KeyValues kvConfig = new KeyValues("AdminRoom");
 
-	if (!kvConfig.ImportFromFile(sConfigFile))
+	if (FileExists(sConfigFile_override))
 	{
-		delete kvConfig;
-		return;
+		if(!kvConfig.ImportFromFile(sConfigFile_override))
+		{
+			LogMessage("Unable to load config override: \"%s\"", sConfigFile_override);
+			delete kvConfig;
+			return;
+		}
+		else LogMessage("Loaded override mapconfig: \"%s\"", sConfigFile_override);
+	}
+	else
+	{
+		if(!kvConfig.ImportFromFile(sConfigFile))
+		{
+			LogMessage("Unable to load config: \"%s\"", sConfigFile);
+			delete kvConfig;
+			return;
+		}
+		else LogMessage("Loaded mapconfig: \"%s\"", sConfigFile);
 	}
 
 	kvConfig.Rewind();
