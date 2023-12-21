@@ -28,7 +28,6 @@ ArrayList g_aAutoDetect = null;
 
 CAdminRoom g_AdminRoom = null;
 
-ConVar g_cvLowercase;
 bool g_bLateLoad = false;
 
 public Plugin myinfo =
@@ -50,14 +49,11 @@ public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
 
-	g_cvLowercase = CreateConVar("sm_adminroom_lowercase", "0", "If enabled, the map name will be lowercase before loading the config file.");
-
 	RegAdminCmd("sm_adminroom_reloadcfg", Command_ReloadConfig, ADMFLAG_CONFIG, "Reload both map and keyword configs");
 	RegAdminCmd("sm_adminroom", Command_AdminRoom, ADMFLAG_BAN, "Teleport anyone to the admin room");
 	RegAdminCmd("sm_stage", Command_Stage, ADMFLAG_BAN, "Change the map stage");
 
 	HookEvent("round_start", EventRoundStart, EventHookMode_PostNoCopy);
-	AutoExecConfig(true);
 }
 
 public void EventRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -69,7 +65,7 @@ public void EventRoundStart(Event event, const char[] name, bool dontBroadcast)
 	DetectAdminRoomLocations();
 }
 
-public void OnConfigsExecuted()
+public void OnMapStart()
 {
 	LoadMapConfig();
 	LoadConfig();
@@ -95,7 +91,7 @@ public void OnClientDisconnect(int client)
 public Action Command_ReloadConfig(int client, int argc)
 {
 	g_bLateLoad = true;
-	OnConfigsExecuted();
+	OnMapStart();
 
 	CReplyToCommand(client, "%s AdminRoom configs reloaded.", TAG_COLOR);
 	LogAction(client, -1, "[AdminRoom] %L Reloaded the configs files.", client);
@@ -498,16 +494,19 @@ stock void LoadMapConfig()
 {
 	InitAdminRoom();
 
-	char sMapName[PLATFORM_MAX_PATH];
+	char sMapName[PLATFORM_MAX_PATH], sMapNameLowercase[PLATFORM_MAX_PATH];
 	GetCurrentMap(sMapName, sizeof(sMapName));
-
-	if (g_cvLowercase.BoolValue) StringToLowerCase(sMapName);
+	strcopy(sMapNameLowercase, sizeof(sMapNameLowercase), sMapName);
+	StringToLowerCase(sMapNameLowercase);
 
 	char sConfigFile[PLATFORM_MAX_PATH], sConfigFile_override[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, sConfigFile, sizeof(sConfigFile), "configs/adminroom/maps/%s.cfg", sMapName);
 	BuildPath(Path_SM, sConfigFile_override, sizeof(sConfigFile_override), "configs/adminroom/maps/%s_override.cfg", sMapName);
 
 	KeyValues kvConfig = new KeyValues("AdminRoom");
+
+	if (!FileExists(sConfigFile_override))
+		BuildPath(Path_SM, sConfigFile_override, sizeof(sConfigFile_override), "configs/adminroom/maps/%s_override.cfg", sMapNameLowercase);
 
 	if (FileExists(sConfigFile_override))
 	{
@@ -521,6 +520,9 @@ stock void LoadMapConfig()
 	}
 	else
 	{
+		if (!FileExists(sConfigFile))
+			BuildPath(Path_SM, sConfigFile, sizeof(sConfigFile), "configs/adminroom/maps/%s.cfg", sMapNameLowercase);
+
 		if(!kvConfig.ImportFromFile(sConfigFile))
 		{
 			LogMessage("Unable to load config: \"%s\"", sConfigFile);
@@ -747,7 +749,7 @@ stock void DetectAdminRoomLocations()
 		}
 	}
 
-	if (g_cAdminRoomLocationsDetected.Length)
+	if (g_cAdminRoomLocationsDetected != null && g_cAdminRoomLocationsDetected.Length > 0)
 	{
 		// SortCustom1D(g_ArrayEntity, dArraySize, OrderByLocation);
 	}
