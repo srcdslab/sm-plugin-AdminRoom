@@ -35,7 +35,7 @@ public Plugin myinfo =
 	name = "Admin Room",
 	author = "IT-KILLER, BotoX, maxime1907, .Rushaway",
 	description = "Teleport to admin rooms and change stages.",
-	version = "2.1.1",
+	version = "2.1.2",
 	url = ""
 };
 
@@ -183,7 +183,7 @@ public Action Command_Stage(int client, int argc)
 		char sName[64];
 		cStage.GetName(sName, sizeof(sName));
 
-		CReplyToCommand(client, "%s Triggering \"{olive}%s{default}\".", TAG_COLOR, sName);
+		// CReplyToCommand(client, "%s Triggering \"{olive}%s{default}\".", TAG_COLOR, sName);
 
 		ArrayList cActions;
 		if (cStage.GetActions(cActions))
@@ -198,11 +198,30 @@ public Action Command_Stage(int client, int argc)
 				char sEvent[64];
 				cAction.GetEvent(sEvent, sizeof(sEvent));
 
-				CReplyToCommand(client, "%s Firing \"{olive}%s{default}\".", TAG_COLOR, sIdentifier);
+				// CReplyToCommand(client, "%s Firing \"{olive}%s{default}\".", TAG_COLOR, sIdentifier);
 
 				int entity = INVALID_ENT_REFERENCE;
 				while((entity = FindEntityByTargetname(entity, sIdentifier, "*")) != INVALID_ENT_REFERENCE)
 				{
+					char sClassnameBuf[64];
+					GetEdictClassname(entity, sClassnameBuf, sizeof(sClassnameBuf));
+					if (strcmp(sClassnameBuf, "func_button", false) == 0)
+					{
+						int iOffset = FindDataMapInfo(entity, "m_bLocked");
+						if (iOffset != -1 && GetEntData(entity, iOffset, 1))
+						{
+							// Handling client for plugins who change stages (to be able to debug it)
+							if (client > 0)
+								CReplyToCommand(client, "%s Can not set \"{olive}%s{default}\". Button (#%s) is locked.", TAG_COLOR, sName, sIdentifier);
+							else
+							{
+								CPrintToChatAll("%s Can not set \"{olive}%s{default}\". Button (#%s) is locked.", TAG_COLOR, sName, sIdentifier);
+								LogAction(client, -1, "\"%L\" tried to set \"%s\" but the button (#%s) is locked.", client, sName, sIdentifier);
+							}
+
+							return Plugin_Handled;
+						}
+					}
 					AcceptEntityInput(entity, sEvent, client, client);
 				}
 			}
@@ -505,9 +524,11 @@ stock void LoadMapConfig()
 
 	KeyValues kvConfig = new KeyValues("AdminRoom");
 
+	// Attempt to load the override config with default map name
 	if (!FileExists(sConfigFile_override))
 		BuildPath(Path_SM, sConfigFile_override, sizeof(sConfigFile_override), "configs/adminroom/maps/%s_override.cfg", sMapNameLowercase);
 
+	// Attempt to load the override config with lowercase map name
 	if (FileExists(sConfigFile_override))
 	{
 		if(!kvConfig.ImportFromFile(sConfigFile_override))
@@ -516,20 +537,27 @@ stock void LoadMapConfig()
 			delete kvConfig;
 			return;
 		}
-		else LogMessage("Loaded override mapconfig: \"%s\"", sConfigFile_override);
+
+		LogMessage("Loaded override mapconfig: \"%s\"", sConfigFile_override);
 	}
-	else
+	else // No override config found, try to load the default config
 	{
+		// Attempt to load the default config with default map name
 		if (!FileExists(sConfigFile))
 			BuildPath(Path_SM, sConfigFile, sizeof(sConfigFile), "configs/adminroom/maps/%s.cfg", sMapNameLowercase);
 
-		if(!kvConfig.ImportFromFile(sConfigFile))
+		// Attempt to load the default config with lowercase map name
+		if (FileExists(sConfigFile))
 		{
-			LogMessage("Unable to load config: \"%s\"", sConfigFile);
-			delete kvConfig;
-			return;
+			if(!kvConfig.ImportFromFile(sConfigFile))
+			{
+				LogMessage("Unable to load config: \"%s\"", sConfigFile);
+				delete kvConfig;
+				return;
+			}
+
+			LogMessage("Loaded mapconfig: \"%s\"", sConfigFile);
 		}
-		else LogMessage("Loaded mapconfig: \"%s\"", sConfigFile);
 	}
 
 	kvConfig.Rewind();
