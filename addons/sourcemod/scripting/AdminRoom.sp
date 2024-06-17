@@ -35,14 +35,14 @@ public Plugin myinfo =
 	name = "Admin Room",
 	author = "IT-KILLER, BotoX, maxime1907, .Rushaway",
 	description = "Teleport to admin rooms and change stages.",
-	version = "2.1.2",
+	version = "2.1.3",
 	url = ""
 };
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-   g_bLateLoad = late;
-   return APLRes_Success;
+	g_bLateLoad = late;
+	return APLRes_Success;
 }
 
 public void OnPluginStart()
@@ -169,7 +169,7 @@ public Action Command_Stage(int client, int argc)
 				char sTrigger[32];
 				cTrigger.GetValue(sTrigger, sizeof(sTrigger));
 
-				if (StrEqual(sArg, sTrigger, true))
+				if (strcmp(sArg, sTrigger, false) == 0)
 				{
 					bFound = true;
 					break;
