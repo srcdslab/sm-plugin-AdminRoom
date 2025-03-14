@@ -35,7 +35,7 @@ public Plugin myinfo =
 	name = "Admin Room",
 	author = "IT-KILLER, BotoX, maxime1907, .Rushaway",
 	description = "Teleport to admin rooms and change stages.",
-	version = "2.1.3",
+	version = "2.1.4",
 	url = ""
 };
 
@@ -835,7 +835,7 @@ stock bool logicalButtonMatch(int entity)
 	return false;
 }
 
-stock int OrderByLocation(int index1, int index2, const int[] array, Handle hndl)
+stock int OrderByLocation(int index1, int index2)
 {
 	float position[3];
 
