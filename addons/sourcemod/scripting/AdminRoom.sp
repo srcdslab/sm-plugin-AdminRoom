@@ -35,7 +35,7 @@ public Plugin myinfo =
 	name = "Admin Room",
 	author = "IT-KILLER, BotoX, maxime1907, .Rushaway",
 	description = "Teleport to admin rooms and change stages.",
-	version = "2.1.4",
+	version = "2.1.5",
 	url = ""
 };
 
