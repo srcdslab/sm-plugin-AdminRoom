@@ -150,7 +150,10 @@ methodmap CStage < Basic
 		{
 			cTriggers.Push(cTrigger);
 			this.SetValue("cTriggers", cTriggers);
+			return true;
 		}
+
+		return false;
 	}
 
 	public bool GetActions(ArrayList &cActions)
