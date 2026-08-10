@@ -35,7 +35,7 @@ public Plugin myinfo =
 	name = "Admin Room",
 	author = "IT-KILLER, BotoX, maxime1907, .Rushaway",
 	description = "Teleport to admin rooms and change stages.",
-	version = "2.1.6",
+	version = "2.1.7",
 	url = ""
 };
 
@@ -845,7 +845,11 @@ stock int OrderByLocation(int index1, int index2)
 	GetEntPropVector(index2, Prop_Send, "m_vecOrigin", position);
 	float B = position[0] + position[1] + position[2];
 
-	return FloatCompare(A, B);
+	if (A > B)
+		return 1;
+	if (A < B)
+		return -1;
+	return 0;
 }
 
 stock bool startWith(const char[] str, const char[] substr, bool caseSensitive = false)
