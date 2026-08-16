@@ -54,6 +54,8 @@ jobs:
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v7
+
       - uses: dev-drprasad/delete-tag-and-release@v1.1
         with:
           delete_release: true
