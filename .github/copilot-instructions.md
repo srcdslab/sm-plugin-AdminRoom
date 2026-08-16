@@ -110,28 +110,42 @@ g_cAdminRoomLocationsDetected = new ArrayList();
 
 ## Build System
 
-### SourceKnight Configuration
-The project uses **SourceKnight** (`sourceknight.yaml`) for:
-- Dependency management (automatically downloads SourceMod, includes)
-- Build compilation
-- Package creation
+### Compiler & Dependencies
+The plugin is compiled with the SourcePawn compiler (`spcomp`) from **SourceMod 1.12.x**.
+Include dependencies are cloned from their upstream repositories and copied into
+`addons/sourcemod/scripting/include/`:
+
+| Include | Repository |
+| --- | --- |
+| `multicolors` | https://github.com/srcdslab/sm-plugin-MultiColors |
+| `outputinfo` | https://github.com/srcdslab/sm-ext-outputinfo |
+| `basic` | https://github.com/srcdslab/sm-plugin-basic |
+| `utilshelper` | https://github.com/srcdslab/sm-plugin-utilshelper |
 
 ### Build Commands
 ```bash
-# Install SourceKnight (if not available)
-pip install sourceknight
+# Fetch include dependencies
+mkdir -p addons/sourcemod/scripting/include deps
+git clone --depth=1 https://github.com/srcdslab/sm-plugin-MultiColors.git deps/multicolors
+cp -R deps/multicolors/addons/sourcemod/scripting/include/* addons/sourcemod/scripting/include/
+git clone --depth=1 https://github.com/srcdslab/sm-ext-outputinfo.git deps/outputinfo
+cp -R deps/outputinfo/package/addons/sourcemod/scripting/include/* addons/sourcemod/scripting/include/
+git clone --depth=1 https://github.com/srcdslab/sm-plugin-basic.git deps/basic
+cp -R deps/basic/addons/sourcemod/scripting/include/* addons/sourcemod/scripting/include/
+git clone --depth=1 https://github.com/srcdslab/sm-plugin-utilshelper.git deps/utilshelper
+cp -R deps/utilshelper/addons/sourcemod/scripting/include/* addons/sourcemod/scripting/include/
 
 # Build the plugin
-sourceknight build
-
-# Clean build artifacts
-sourceknight clean
+cd addons/sourcemod/scripting
+mkdir -p ../plugins
+spcomp -i include -o ../plugins/AdminRoom.smx AdminRoom.sp
 ```
 
 ### CI/CD Pipeline
+`.github/workflows/ci.yml` (native GitHub Actions, no external build tool):
 - **Trigger**: Push, PR, or manual dispatch
-- **Build**: Compiles plugin using SourceKnight action
-- **Release**: Creates tagged releases with compiled binaries
+- **Build**: `rumblefrog/setup-sp` installs the 1.12.x compiler, then `spcomp` builds `AdminRoom.sp`
+- **Release**: Creates tagged releases with compiled binaries + configs
 - **Artifacts**: Uploads build results for testing
 
 ## Common Development Tasks
