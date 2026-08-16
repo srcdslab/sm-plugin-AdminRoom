@@ -125,7 +125,7 @@ Include dependencies are cloned from their upstream repositories and copied into
 ### Build Commands
 ```bash
 # Fetch include dependencies
-mkdir -p addons/sourcemod/scripting/include
+mkdir -p addons/sourcemod/scripting/include deps
 git clone --depth=1 https://github.com/srcdslab/sm-plugin-MultiColors.git deps/multicolors
 cp -R deps/multicolors/addons/sourcemod/scripting/include/* addons/sourcemod/scripting/include/
 git clone --depth=1 https://github.com/srcdslab/sm-ext-outputinfo.git deps/outputinfo
