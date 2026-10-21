@@ -35,7 +35,7 @@ public Plugin myinfo =
 	name = "Admin Room",
 	author = "IT-KILLER, BotoX, maxime1907, .Rushaway",
 	description = "Teleport to admin rooms and change stages.",
-	version = "2.1.7",
+	version = "2.1.8",
 	url = ""
 };
 
@@ -856,9 +856,9 @@ stock bool startWith(const char[] str, const char[] substr, bool caseSensitive =
 {
 	char pattern[125];
 	FormatEx(pattern, 125, "%s^\\s*(%s)", caseSensitive ? "" : "(?i)", substr);
-	Regex sw_regex = CompileRegex(pattern);
-	int result = MatchRegex(sw_regex, str);
-	CloseHandle(sw_regex);
+	Regex sw_regex = new Regex(pattern);
+	int result = sw_regex.Match(str);
+	delete sw_regex;
 	return result > 0;
 }
 
@@ -954,7 +954,7 @@ stock void FixPlayerPosition(int client)
 	}
 	else 
 	{
-		Handle trace = INVALID_HANDLE;
+		Handle trace = null;
 		float vecOrigin[3];
 		float vecAngle[3];
 		
@@ -963,12 +963,12 @@ stock void FixPlayerPosition(int client)
 		trace = TR_TraceRayFilterEx(vecOrigin, vecAngle, MASK_SOLID, RayType_Infinite, TraceEntityFilterSolid);		
 		if(!TR_DidHit(trace)) 
 		{
-			CloseHandle(trace);
+			delete trace;
 			return;
 		}
 		
 		TR_GetEndPosition(vecOrigin, trace);
-		CloseHandle(trace);
+		delete trace;
 		vecOrigin[2] += 10.0;
 		TeleportEntity(client, vecOrigin, NULL_VECTOR, Ground_Velocity); 
 		
