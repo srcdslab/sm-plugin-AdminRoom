@@ -126,6 +126,7 @@ methodmap CStage < Basic
 		myclass.SetValue("cActions", new ArrayList());
 		myclass.SetBool("bVotable", true);
 		myclass.SetInt("iRtdPercent", 0);
+		myclass.SetBool("bOnce", false);
 
 		return view_as<CStage>(myclass);
 	}
@@ -187,8 +188,9 @@ methodmap CStage < Basic
 		}
 	}
 
-	// Percent chance (1-100) this stage is auto-selected without a vote the first time the vote
-	// fires this map, e.g. a rare/bonus stage. 0 (default) disables this "roll the dice" behavior.
+	// Percent chance (1-100) this stage is auto-selected without a vote each time the vote fires,
+	// as long as it hasn't been played this map, e.g. a rare/bonus stage. 0 (default) disables
+	// this "roll the dice" behavior.
 	property int iRtdPercent
 	{
 		public get()
@@ -198,6 +200,20 @@ methodmap CStage < Basic
 		public set(int value)
 		{
 			this.SetInt("iRtdPercent", value);
+		}
+	}
+
+	// Whether this stage can only be played once per map: once played, the stage vote no longer
+	// offers it in the menu. Defaults to false.
+	property bool bOnce
+	{
+		public get()
+		{
+			return this.GetBool("bOnce");
+		}
+		public set(bool value)
+		{
+			this.SetBool("bOnce", value);
 		}
 	}
 }

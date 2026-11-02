@@ -29,7 +29,7 @@ ArrayList g_aAutoDetect = null;
 
 CAdminRoom g_AdminRoom = null;
 int g_iCurrentStage = -1;
-Handle g_hForwardOnStageChanged = null;
+GlobalForward g_hForwardOnStageChanged = null;
 
 bool g_bLateLoad = false;
 
@@ -40,8 +40,8 @@ bool g_bIsRevote = false;
 ArrayList g_cStageCooldown = null;  // int (0/1) per stage index, parallel to g_AdminRoom's stages
 ArrayList g_cStagePlayed = null;    // int (0/1) per stage index, parallel to g_AdminRoom's stages
 ArrayList g_cVoteStageOrder = null; // shuffled stage indices eligible for the current vote
-Handle g_VoteMenu = null;
 Handle g_hVoteCountdownTimer = null;
+int g_iVoteCountdown = 0;
 
 public Plugin myinfo =
 {
@@ -55,6 +55,16 @@ public Plugin myinfo =
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	g_bLateLoad = late;
+
+	CreateNative("AdminRoom_IsEnabled", Native_AdminRoom_IsEnabled);
+	CreateNative("AdminRoom_GetStageCount", Native_AdminRoom_GetStageCount);
+	CreateNative("AdminRoom_GetStageName", Native_AdminRoom_GetStageName);
+	CreateNative("AdminRoom_GetCurrentStage", Native_AdminRoom_GetCurrentStage);
+	CreateNative("AdminRoom_SetStage", Native_AdminRoom_SetStage);
+	CreateNative("AdminRoom_SetStageByTrigger", Native_AdminRoom_SetStageByTrigger);
+
+	RegPluginLibrary("AdminRoom");
+
 	return APLRes_Success;
 }
 
@@ -73,16 +83,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", EventRoundStart, EventHookMode_PostNoCopy);
 
-	g_hForwardOnStageChanged = CreateGlobalForward("AdminRoom_OnStageChanged", ET_Ignore, Param_Cell, Param_String, Param_Cell);
-
-	CreateNative("AdminRoom_IsEnabled", Native_AdminRoom_IsEnabled);
-	CreateNative("AdminRoom_GetStageCount", Native_AdminRoom_GetStageCount);
-	CreateNative("AdminRoom_GetStageName", Native_AdminRoom_GetStageName);
-	CreateNative("AdminRoom_GetCurrentStage", Native_AdminRoom_GetCurrentStage);
-	CreateNative("AdminRoom_SetStage", Native_AdminRoom_SetStage);
-	CreateNative("AdminRoom_SetStageByTrigger", Native_AdminRoom_SetStageByTrigger);
-
-	RegPluginLibrary("AdminRoom");
+	g_hForwardOnStageChanged = new GlobalForward("AdminRoom_OnStageChanged", ET_Ignore, Param_Cell, Param_String, Param_Cell);
 }
 
 public void EventRoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -364,12 +365,23 @@ public Action Command_StageVote(int client, int argc)
 	if (client != 0)
 	{
 		CPrintToChatAll("%s {cyan}%s{default} has initiated a stage vote (in %.0f seconds).", TAG_COLOR, sName, cVoteConfig.fDelay);
-		TerminateVoteRound(cVoteConfig.fDelay);
+		CreateTimer(cVoteConfig.fDelay, Timer_AdminStartVote, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
+	else
+		CPrintToChatAll("%s {cyan}%s{default} has initiated a stage vote (next round).", TAG_COLOR, sName);
 
 	Cmd_StartVote();
 
 	return Plugin_Handled;
+}
+
+// Ends the round once the configured delay has passed after an admin started the vote, so the
+// vote opens at the start of the next round (MakoVote's AdminStartVote_Timer).
+public Action Timer_AdminStartVote(Handle timer)
+{
+	CPrintToChatAll("%s Restarting round, be ready to vote.", TAG_COLOR);
+	TerminateVoteRound(1.5);
+	return Plugin_Stop;
 }
 
 // Resets per-map vote bookkeeping. Called on every map start.
@@ -378,6 +390,7 @@ stock void ResetVoteState()
 	g_bVoteFinished = true;
 	g_bVoteStartNextRound = false;
 	g_bIsRevote = false;
+	g_iVoteCountdown = 0;
 
 	delete g_hVoteCountdownTimer;
 	delete g_cStageCooldown;
@@ -398,8 +411,12 @@ stock void ResetVoteState()
 
 void Cmd_StartVote()
 {
+	// The stage that just ended counts as played, whether the vote, the dice or sm_stage picked it.
 	if (g_iCurrentStage > -1 && g_iCurrentStage < g_cStageCooldown.Length)
+	{
 		g_cStageCooldown.Set(g_iCurrentStage, 1);
+		g_cStagePlayed.Set(g_iCurrentStage, 1);
+	}
 
 	CVoteConfig cVoteConfig;
 	g_AdminRoom.GetVoteConfig(cVoteConfig);
@@ -433,8 +450,13 @@ void GenerateVoteStageOrder()
 	for (int i = 0; i < cStages.Length; i++)
 	{
 		CStage cStage = cStages.Get(i);
-		if (cStage.bVotable)
-			g_cVoteStageOrder.Push(i);
+		if (!cStage.bVotable)
+			continue;
+
+		if (cStage.bOnce && i < g_cStagePlayed.Length && g_cStagePlayed.Get(i))
+			continue;
+
+		g_cVoteStageOrder.Push(i);
 	}
 
 	int iSize = g_cVoteStageOrder.Length;
@@ -462,6 +484,16 @@ void StartVoteCountdown()
 	ArrayList cOnStartActions;
 	if (cVoteConfig.GetOnStartActions(cOnStartActions))
 		FireActions(cOnStartActions, 0);
+
+	RestartVoteCountdown();
+}
+
+// (Re)starts the countdown shown before the vote menu opens, from the configured value.
+void RestartVoteCountdown()
+{
+	CVoteConfig cVoteConfig;
+	g_AdminRoom.GetVoteConfig(cVoteConfig);
+	g_iVoteCountdown = cVoteConfig.iCountdown;
 
 	delete g_hVoteCountdownTimer;
 	g_hVoteCountdownTimer = CreateTimer(1.0, Timer_VoteCountdown, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
@@ -511,18 +543,10 @@ bool TryRollRtdStage()
 
 public Action Timer_VoteCountdown(Handle timer)
 {
-	CVoteConfig cVoteConfig;
-	g_AdminRoom.GetVoteConfig(cVoteConfig);
+	PrintCenterTextAll("[AdminRoom] Starting stage vote in %ds", g_iVoteCountdown);
 
-	static int iCountdown = -1;
-	if (iCountdown < 0)
-		iCountdown = cVoteConfig.iCountdown;
-
-	PrintCenterTextAll("[AdminRoom] Starting stage vote in %ds", iCountdown);
-
-	if (iCountdown-- <= 0)
+	if (g_iVoteCountdown-- <= 0)
 	{
-		iCountdown = -1;
 		g_hVoteCountdownTimer = null;
 		InitiateStageVote();
 		return Plugin_Stop;
@@ -531,23 +555,36 @@ public Action Timer_VoteCountdown(Handle timer)
 	return Plugin_Continue;
 }
 
+public Action Timer_RetryStageVote(Handle timer)
+{
+	g_hVoteCountdownTimer = null;
+	InitiateStageVote();
+	return Plugin_Stop;
+}
+
 void InitiateStageVote()
 {
 	if (IsVoteInProgress())
 	{
+		CPrintToChatAll("%s Another vote is currently in progress, retrying in 5 seconds.", TAG_COLOR);
 		delete g_hVoteCountdownTimer;
-		g_hVoteCountdownTimer = CreateTimer(5.0, Timer_VoteCountdown, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+		g_hVoteCountdownTimer = CreateTimer(5.0, Timer_RetryStageVote, _, TIMER_FLAG_NO_MAPCHANGE);
 		return;
 	}
 
 	ArrayList cStages;
-	g_AdminRoom.GetStages(cStages);
+	if (!g_AdminRoom.GetStages(cStages) || !g_cVoteStageOrder)
+		return;
 
-	g_VoteMenu = CreateMenu(Handler_StageVoteMenu, MenuAction_End|MenuAction_Display|MenuAction_DisplayItem|MenuAction_VoteCancel);
+	Menu menu = new Menu(Handler_StageVoteMenu, MenuAction_End|MenuAction_Display|MenuAction_DisplayItem|MenuAction_VoteCancel);
 
 	for (int i = 0; i < g_cVoteStageOrder.Length; i++)
 	{
+		// The config may have been reloaded with fewer stages since the order was generated.
 		int iStageIndex = g_cVoteStageOrder.Get(i);
+		if (iStageIndex >= cStages.Length)
+			continue;
+
 		CStage cStage = cStages.Get(iStageIndex);
 
 		char sName[64];
@@ -556,18 +593,18 @@ void InitiateStageVote()
 		char sInfo[16];
 		IntToString(iStageIndex, sInfo, sizeof(sInfo));
 
-		bool bOnCooldown = view_as<bool>(g_cStageCooldown.Get(iStageIndex));
+		bool bOnCooldown = iStageIndex < g_cStageCooldown.Length && view_as<bool>(g_cStageCooldown.Get(iStageIndex));
 
-		AddMenuItem(g_VoteMenu, sInfo, sName, bOnCooldown ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		menu.AddItem(sInfo, sName, bOnCooldown ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	}
 
-	SetMenuOptionFlags(g_VoteMenu, MENU_NO_PAGINATION);
-	SetMenuTitle(g_VoteMenu, "What stage to play next?");
-	SetVoteResultCallback(g_VoteMenu, Handler_StageVoteFinished);
-	VoteMenuToAll(g_VoteMenu, 15);
+	menu.OptionFlags = MENU_NO_PAGINATION;
+	menu.SetTitle("What stage to play next?");
+	menu.VoteResultCallback = Handler_StageVoteFinished;
+	menu.DisplayVoteToAll(15);
 }
 
-public int Handler_StageVoteMenu(Handle menu, MenuAction action, int param1, int param2)
+public int Handler_StageVoteMenu(Menu menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 	{
@@ -582,7 +619,7 @@ public int Handler_StageVoteMenu(Handle menu, MenuAction action, int param1, int
 	return 0;
 }
 
-public void Handler_StageVoteFinished(Handle menu, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+public void Handler_StageVoteFinished(Menu menu, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	CVoteConfig cVoteConfig;
 	g_AdminRoom.GetVoteConfig(cVoteConfig);
@@ -595,8 +632,8 @@ public void Handler_StageVoteFinished(Handle menu, int num_votes, int num_client
 		CPrintToChatAll("%s A revote is needed!", TAG_COLOR);
 
 		char sFirst[16], sSecond[16];
-		GetMenuItem(menu, item_info[0][VOTEINFO_ITEM_INDEX], sFirst, sizeof(sFirst));
-		GetMenuItem(menu, item_info[1][VOTEINFO_ITEM_INDEX], sSecond, sizeof(sSecond));
+		menu.GetItem(item_info[0][VOTEINFO_ITEM_INDEX], sFirst, sizeof(sFirst));
+		menu.GetItem(item_info[1][VOTEINFO_ITEM_INDEX], sSecond, sizeof(sSecond));
 
 		delete g_cVoteStageOrder;
 		g_cVoteStageOrder = new ArrayList();
@@ -604,9 +641,7 @@ public void Handler_StageVoteFinished(Handle menu, int num_votes, int num_client
 		g_cVoteStageOrder.Push(StringToInt(sSecond));
 
 		g_bIsRevote = true;
-
-		delete g_hVoteCountdownTimer;
-		g_hVoteCountdownTimer = CreateTimer(1.0, Timer_VoteCountdown, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+		RestartVoteCountdown();
 
 		return;
 	}
@@ -615,12 +650,12 @@ public void Handler_StageVoteFinished(Handle menu, int num_votes, int num_client
 	FinishStageVote(menu, item_info);
 }
 
-void FinishStageVote(Handle menu, const int[][] item_info)
+void FinishStageVote(Menu menu, const int[][] item_info)
 {
 	g_bVoteFinished = true;
 
 	char sIndex[16];
-	GetMenuItem(menu, item_info[0][VOTEINFO_ITEM_INDEX], sIndex, sizeof(sIndex));
+	menu.GetItem(item_info[0][VOTEINFO_ITEM_INDEX], sIndex, sizeof(sIndex));
 	int iWinnerStage = StringToInt(sIndex);
 
 	ArrayList cStages;
@@ -1125,6 +1160,7 @@ stock void LoadMapStages(KeyValues kvConfig)
 		cStage.SetName(sName);
 		cStage.bVotable = (kvConfig.GetNum("votable", 1) != 0);
 		cStage.iRtdPercent = kvConfig.GetNum("rtd_percent", 0);
+		cStage.bOnce = (kvConfig.GetNum("once", 0) != 0);
 
 		if (!kvConfig.JumpToKey("triggers", false))
 		{
