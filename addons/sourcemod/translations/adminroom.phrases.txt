@@ -1,0 +1,291 @@
+"Phrases"
+{
+	"Configs Reloaded"
+	{
+		"en"		"AdminRoom configs reloaded."
+		"fr"		"Configs d'AdminRoom rechargées."
+		"ru"		"Конфиги AdminRoom перезагружены."
+		"es"		"Configuraciones de AdminRoom recargadas."
+		"de"		"AdminRoom-Konfigurationen neu geladen."
+		"pt"		"Configurações do AdminRoom recarregadas."
+		"chi"		"AdminRoom 配置已重新加载。"
+	}
+	"Map Not Supported"
+	{
+		"en"		"The current map is not supported."
+		"fr"		"La map actuelle n'est pas prise en charge."
+		"ru"		"Текущая карта не поддерживается."
+		"es"		"El mapa actual no es compatible."
+		"de"		"Die aktuelle Map wird nicht unterstützt."
+		"pt"		"O mapa atual não é suportado."
+		"chi"		"当前地图不受支持。"
+	}
+	"No Stages"
+	{
+		"en"		"The current map either does not have stages or is incorrectly configured."
+		"fr"		"La map actuelle n'a pas de stages ou est mal configurée."
+		"ru"		"У текущей карты нет этапов или она неправильно настроена."
+		"es"		"El mapa actual no tiene fases o está mal configurado."
+		"de"		"Die aktuelle Map hat keine Stages oder ist falsch konfiguriert."
+		"pt"		"O mapa atual não tem fases ou está configurado incorretamente."
+		"chi"		"当前地图没有关卡，或配置不正确。"
+	}
+	"Available Stages"
+	{
+		"en"		"Available stages:"
+		"fr"		"Stages disponibles :"
+		"ru"		"Доступные этапы:"
+		"es"		"Fases disponibles:"
+		"de"		"Verfügbare Stages:"
+		"pt"		"Fases disponíveis:"
+		"chi"		"可用关卡："
+	}
+	"Invalid Stage"
+	{
+		"#format"	"{1:s}"
+		"en"		"Invalid stage: {1}"
+		"fr"		"Stage invalide : {1}"
+		"ru"		"Неверный этап: {1}"
+		"es"		"Fase no válida: {1}"
+		"de"		"Ungültige Stage: {1}"
+		"pt"		"Fase inválida: {1}"
+		"chi"		"无效的关卡：{1}"
+	}
+	"Button Locked"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"Cannot set \"{olive}{1}{default}\": the button (#{2}) is locked."
+		"fr"		"Impossible de lancer \"{olive}{1}{default}\" : le bouton (#{2}) est verrouillé."
+		"ru"		"Не удалось включить \"{olive}{1}{default}\": кнопка (#{2}) заблокирована."
+		"es"		"No se puede activar \"{olive}{1}{default}\": el botón (#{2}) está bloqueado."
+		"de"		"\"{olive}{1}{default}\" kann nicht gesetzt werden: Der Button (#{2}) ist gesperrt."
+		"pt"		"Não é possível ativar \"{olive}{1}{default}\": o botão (#{2}) está travado."
+		"chi"		"无法设置 \"{olive}{1}{default}\"：按钮 (#{2}) 已锁定。"
+	}
+	"Stage Changed"
+	{
+		"#format"	"{1:s}"
+		"en"		"Changed the stage to {1}."
+		"fr"		"A changé le stage pour {1}."
+		"ru"		"Сменил этап на {1}."
+		"es"		"Cambió la fase a {1}."
+		"de"		"Hat die Stage auf {1} geändert."
+		"pt"		"Mudou a fase para {1}."
+		"chi"		"将关卡切换为 {1}。"
+	}
+	"Vote Not Configured"
+	{
+		"en"		"Stage vote is not configured for this map."
+		"fr"		"Le vote de stage n'est pas configuré sur cette map."
+		"ru"		"Голосование за этап не настроено для этой карты."
+		"es"		"La votación de fase no está configurada en este mapa."
+		"de"		"Die Stage-Abstimmung ist für diese Map nicht eingerichtet."
+		"pt"		"A votação de fase não está configurada neste mapa."
+		"chi"		"此地图未配置关卡投票。"
+	}
+	"Vote In Progress"
+	{
+		"en"		"A stage vote is already in progress."
+		"fr"		"Un vote de stage est déjà en cours."
+		"ru"		"Голосование за этап уже идёт."
+		"es"		"Ya hay una votación de fase en curso."
+		"de"		"Es läuft bereits eine Stage-Abstimmung."
+		"pt"		"Já há uma votação de fase em andamento."
+		"chi"		"关卡投票已在进行中。"
+	}
+	"Vote Started"
+	{
+		"#format"	"{1:N},{2:d}"
+		"en"		"{cyan}{1}{default} has initiated a stage vote (in {2} seconds)."
+		"fr"		"{cyan}{1}{default} a lancé un vote de stage (dans {2} secondes)."
+		"ru"		"{cyan}{1}{default} начал голосование за этап (через {2} сек.)."
+		"es"		"{cyan}{1}{default} ha iniciado una votación de fase (en {2} segundos)."
+		"de"		"{cyan}{1}{default} hat eine Stage-Abstimmung gestartet (in {2} Sekunden)."
+		"pt"		"{cyan}{1}{default} iniciou uma votação de fase (em {2} segundos)."
+		"chi"		"{cyan}{1}{default} 发起了关卡投票（{2} 秒后开始）。"
+	}
+	"Vote Started Server"
+	{
+		"en"		"{cyan}The server{default} has initiated a stage vote (next round)."
+		"fr"		"{cyan}Le serveur{default} a lancé un vote de stage (au prochain round)."
+		"ru"		"{cyan}Сервер{default} начал голосование за этап (в следующем раунде)."
+		"es"		"{cyan}El servidor{default} ha iniciado una votación de fase (en la próxima ronda)."
+		"de"		"{cyan}Der Server{default} hat eine Stage-Abstimmung gestartet (nächste Runde)."
+		"pt"		"{cyan}O servidor{default} iniciou uma votação de fase (na próxima rodada)."
+		"chi"		"{cyan}服务器{default} 发起了关卡投票（下一回合开始）。"
+	}
+	"Vote Round Restart"
+	{
+		"en"		"Restarting round, be ready to vote."
+		"fr"		"Redémarrage du round, préparez-vous à voter."
+		"ru"		"Перезапуск раунда, приготовьтесь голосовать."
+		"es"		"Reiniciando la ronda, prepárate para votar."
+		"de"		"Die Runde wird neu gestartet, macht euch bereit zur Abstimmung."
+		"pt"		"Reiniciando a rodada, prepare-se para votar."
+		"chi"		"正在重新开始回合，准备投票。"
+	}
+	"Vote Dice Result"
+	{
+		"#format"	"{1:s}"
+		"en"		"Rolling the dice... Result: {green}{1}{default}!"
+		"fr"		"Lancer de dé... Résultat : {green}{1}{default} !"
+		"ru"		"Бросаем кубик... Результат: {green}{1}{default}!"
+		"es"		"Tirando el dado... Resultado: {green}{1}{default}."
+		"de"		"Es wird gewürfelt... Ergebnis: {green}{1}{default}!"
+		"pt"		"Rolando o dado... Resultado: {green}{1}{default}!"
+		"chi"		"掷骰子中……结果：{green}{1}{default}！"
+	}
+	"Vote Countdown"
+	{
+		"#format"	"{1:d}"
+		"en"		"Starting stage vote in {1}s"
+		"fr"		"Vote de stage dans {1} s"
+		"ru"		"Голосование за этап через {1} с"
+		"es"		"Votación de fase en {1} s"
+		"de"		"Stage-Abstimmung in {1} s"
+		"pt"		"Votação de fase em {1} s"
+		"chi"		"关卡投票将在 {1} 秒后开始"
+	}
+	"Vote Retry"
+	{
+		"en"		"Another vote is currently in progress, retrying in 5 seconds."
+		"fr"		"Un autre vote est en cours, nouvel essai dans 5 secondes."
+		"ru"		"Сейчас идёт другое голосование, повтор через 5 секунд."
+		"es"		"Hay otra votación en curso, se reintentará en 5 segundos."
+		"de"		"Gerade läuft eine andere Abstimmung, neuer Versuch in 5 Sekunden."
+		"pt"		"Outra votação está em andamento, tentando novamente em 5 segundos."
+		"chi"		"另一个投票正在进行中，5 秒后重试。"
+	}
+	"Vote Menu Title"
+	{
+		"en"		"What stage to play next?"
+		"fr"		"Quel stage jouer ensuite ?"
+		"ru"		"Какой этап сыграть следующим?"
+		"es"		"¿Qué fase jugar a continuación?"
+		"de"		"Welche Stage soll als Nächstes gespielt werden?"
+		"pt"		"Qual fase jogar a seguir?"
+		"chi"		"接下来玩哪个关卡？"
+	}
+	"Revote Needed"
+	{
+		"en"		"A revote is needed!"
+		"fr"		"Un nouveau vote est nécessaire !"
+		"ru"		"Требуется повторное голосование!"
+		"es"		"¡Hace falta volver a votar!"
+		"de"		"Eine erneute Abstimmung ist nötig!"
+		"pt"		"É necessária uma nova votação!"
+		"chi"		"需要重新投票！"
+	}
+	"Vote Finished"
+	{
+		"#format"	"{1:s}"
+		"en"		"Vote finished! Moving to {green}{1}{default}."
+		"fr"		"Vote terminé ! Passage à {green}{1}{default}."
+		"ru"		"Голосование завершено! Переход к {green}{1}{default}."
+		"es"		"¡Votación terminada! Pasando a {green}{1}{default}."
+		"de"		"Abstimmung beendet! Weiter mit {green}{1}{default}."
+		"pt"		"Votação encerrada! Indo para {green}{1}{default}."
+		"chi"		"投票结束！即将进入 {green}{1}{default}。"
+	}
+	"Console Cannot Teleport"
+	{
+		"en"		"Console cannot be teleported."
+		"fr"		"La console ne peut pas être téléportée."
+		"ru"		"Консоль нельзя телепортировать."
+		"es"		"La consola no puede ser teletransportada."
+		"de"		"Die Konsole kann nicht teleportiert werden."
+		"pt"		"O console não pode ser teleportado."
+		"chi"		"控制台无法被传送。"
+	}
+	"AdminRoom Usage"
+	{
+		"en"		"Usage: sm_adminroom [#userid|name]"
+		"fr"		"Utilisation : sm_adminroom [#userid|nom]"
+		"ru"		"Использование: sm_adminroom [#userid|имя]"
+		"es"		"Uso: sm_adminroom [#userid|nombre]"
+		"de"		"Verwendung: sm_adminroom [#userid|Name]"
+		"pt"		"Uso: sm_adminroom [#userid|nome]"
+		"chi"		"用法：sm_adminroom [#userid|名字]"
+	}
+	"Menu Sent"
+	{
+		"#format"	"{1:N}"
+		"en"		"AdminRoom menu has been sent to {olive}{1}{default}."
+		"fr"		"Le menu AdminRoom a été envoyé à {olive}{1}{default}."
+		"ru"		"Меню AdminRoom отправлено игроку {olive}{1}{default}."
+		"es"		"El menú de AdminRoom se ha enviado a {olive}{1}{default}."
+		"de"		"Das AdminRoom-Menü wurde an {olive}{1}{default} gesendet."
+		"pt"		"O menu do AdminRoom foi enviado para {olive}{1}{default}."
+		"chi"		"已向 {olive}{1}{default} 发送 AdminRoom 菜单。"
+	}
+	"No Admin Room"
+	{
+		"en"		"Unable to detect any admin room."
+		"fr"		"Aucune admin room n'a été détectée."
+		"ru"		"Не удалось найти ни одной админ-комнаты."
+		"es"		"No se ha detectado ninguna sala de admin."
+		"de"		"Es wurde kein Adminraum gefunden."
+		"pt"		"Nenhuma sala de admin foi detectada."
+		"chi"		"未检测到任何管理员房间。"
+	}
+	"Only One Target"
+	{
+		"en"		"Only one target can be selected."
+		"fr"		"Une seule cible peut être choisie."
+		"ru"		"Можно выбрать только одну цель."
+		"es"		"Solo se puede elegir un objetivo."
+		"de"		"Es kann nur ein Ziel gewählt werden."
+		"pt"		"Só é possível escolher um alvo."
+		"chi"		"只能选择一个目标。"
+	}
+	"Menu Title"
+	{
+		"en"		"Admin Room"
+		"fr"		"Admin Room"
+		"ru"		"Админ-комната"
+		"es"		"Sala de admin"
+		"de"		"Adminraum"
+		"pt"		"Sala de admin"
+		"chi"		"管理员房间"
+	}
+	"Menu Get Out"
+	{
+		"en"		"Get out (saved position)"
+		"fr"		"Sortir (position sauvegardée)"
+		"ru"		"Выйти (сохранённая позиция)"
+		"es"		"Salir (posición guardada)"
+		"de"		"Verlassen (gespeicherte Position)"
+		"pt"		"Sair (posição salva)"
+		"chi"		"离开（返回保存的位置）"
+	}
+	"Teleported To Admin Room"
+	{
+		"en"		"Teleported to the admin room."
+		"fr"		"S'est téléporté dans l'admin room."
+		"ru"		"Телепортировался в админ-комнату."
+		"es"		"Se ha teletransportado a la sala de admin."
+		"de"		"Hat sich in den Adminraum teleportiert."
+		"pt"		"Teleportou-se para a sala de admin."
+		"chi"		"已传送到管理员房间。"
+	}
+	"Position Not Saved"
+	{
+		"en"		"Could not teleport you because your position was not saved."
+		"fr"		"Impossible de vous téléporter : votre position n'a pas été sauvegardée."
+		"ru"		"Не удалось телепортировать вас: ваша позиция не была сохранена."
+		"es"		"No se te pudo teletransportar porque tu posición no se guardó."
+		"de"		"Du konntest nicht teleportiert werden, weil deine Position nicht gespeichert wurde."
+		"pt"		"Não foi possível teleportar você porque sua posição não foi salva."
+		"chi"		"无法传送你，因为你的位置未被保存。"
+	}
+	"Left Admin Room"
+	{
+		"en"		"You have left the admin room."
+		"fr"		"Vous avez quitté l'admin room."
+		"ru"		"Вы покинули админ-комнату."
+		"es"		"Has salido de la sala de admin."
+		"de"		"Du hast den Adminraum verlassen."
+		"pt"		"Você saiu da sala de admin."
+		"chi"		"你已离开管理员房间。"
+	}
+}
