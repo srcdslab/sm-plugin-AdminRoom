@@ -35,7 +35,7 @@ public Plugin myinfo =
 	name = "Admin Room",
 	author = "IT-KILLER, BotoX, maxime1907, .Rushaway",
 	description = "Teleport to admin rooms and change stages.",
-	version = "2.1.8",
+	version = "2.2.0",
 	url = ""
 };
 
@@ -48,6 +48,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public void OnPluginStart()
 {
 	LoadTranslations("common.phrases");
+	LoadTranslations("adminroom.phrases");
 
 	RegAdminCmd("sm_adminroom_reloadcfg", Command_ReloadConfig, ADMFLAG_CONFIG, "Reload both map and keyword configs");
 	RegAdminCmd("sm_adminroom", Command_AdminRoom, ADMFLAG_BAN, "Teleport anyone to the admin room");
@@ -93,7 +94,7 @@ public Action Command_ReloadConfig(int client, int argc)
 	g_bLateLoad = true;
 	OnMapStart();
 
-	CReplyToCommand(client, "%s AdminRoom configs reloaded.", TAG_COLOR);
+	CReplyToCommand(client, "%s %t", TAG_COLOR, "Configs Reloaded");
 	LogAction(client, -1, "[AdminRoom] %L Reloaded the configs files.", client);
 	return Plugin_Handled;
 }
@@ -105,19 +106,19 @@ public Action Command_Stage(int client, int argc)
 
 	if (!g_AdminRoom.bEnabled)
 	{
-		CReplyToCommand(client, "%s The current map is not supported.", TAG_COLOR);
+		CReplyToCommand(client, "%s %t", TAG_COLOR, "Map Not Supported");
 		return Plugin_Handled;
 	}
 
 	if (!cStages || cStages.Length <= 0)
 	{
-		CReplyToCommand(client, "%s The current map either does not have stages or is incorrectly configured.", TAG_COLOR);
+		CReplyToCommand(client, "%s %t", TAG_COLOR, "No Stages");
 		return Plugin_Handled;
 	}
 
 	if (argc < 1)
 	{
-		CReplyToCommand(client, "%s Available stages :", TAG_COLOR);
+		CReplyToCommand(client, "%s %t", TAG_COLOR, "Available Stages");
 
 		for (int i = 0; i < cStages.Length; i++)
 		{
@@ -212,10 +213,10 @@ public Action Command_Stage(int client, int argc)
 						{
 							// Handling client for plugins who change stages (to be able to debug it)
 							if (client > 0)
-								CReplyToCommand(client, "%s Can not set \"{olive}%s{default}\". Button (#%s) is locked.", TAG_COLOR, sName, sIdentifier);
+								CReplyToCommand(client, "%s %t", TAG_COLOR, "Button Locked", sName, sIdentifier);
 							else
 							{
-								CPrintToChatAll("%s Can not set \"{olive}%s{default}\". Button (#%s) is locked.", TAG_COLOR, sName, sIdentifier);
+								CPrintToChatAll("%s %t", TAG_COLOR, "Button Locked", sName, sIdentifier);
 								LogAction(client, -1, "\"%L\" tried to set \"%s\" but the button (#%s) is locked.", client, sName, sIdentifier);
 							}
 
@@ -228,16 +229,20 @@ public Action Command_Stage(int client, int argc)
 		}
 
 		if (client > 0)
-			CShowActivity2(client, "{green}[SM] {olive}", "{default}Changed the stage to {green}%s{default}.", sName);
+		{
+			char sColoredName[80];
+			FormatEx(sColoredName, sizeof(sColoredName), "{green}%s{default}", sName);
+			CShowActivity2(client, "{green}[SM] {olive}", "{default}%t", "Stage Changed", sColoredName);
+		}
 		else
-			ShowActivity2(client, "[SM] ", "Changed the stage to %s.", sName);
+			ShowActivity2(client, "[SM] ", "%t", "Stage Changed", sName);
 
 		LogAction(client, -1, "\"%L\" changed the stage to \"%s\".", client, sName);
 
 		return Plugin_Handled;
 	}
 
-	CReplyToCommand(client, "%s Invalid stage %s", TAG_COLOR, sArg);
+	CReplyToCommand(client, "%s %t", TAG_COLOR, "Invalid Stage", sArg);
 	return Plugin_Handled;
 }
 
@@ -245,13 +250,13 @@ public Action Command_AdminRoom(int client, int argc)
 {
 	if (!client)
 	{
-		CReplyToCommand(client, "%s Console cannot be teleported.", TAG_COLOR);
+		CReplyToCommand(client, "%s %t", TAG_COLOR, "Console Cannot Teleport");
 		return Plugin_Handled;
 	}
 
 	if(argc > 1)
 	{
-		ReplyToCommand(client, "[SM] Usage: sm_adminroom [#userid|name]");
+		ReplyToCommand(client, "[SM] %t", "AdminRoom Usage");
 		return Plugin_Handled;
 	}
 
@@ -280,15 +285,15 @@ public Action Command_AdminRoom(int client, int argc)
 			if ((g_AdminRoom.GetAdminRoomLocations(cAdminRoomLocations) && cAdminRoomLocations.Length > 0) || g_cAdminRoomLocationsDetected.Length > 0)
 			{
 				Menu_AdminRoom(iTargets[i]);
-				CReplyToCommand(client, "%s AdminRoom Menu has been sent to {olive}%N{default}.", TAG_COLOR, iTargets);
-				LogAction(client, client, "\"%L\" printed the AdminRoom Menu to \"%L\".", client, iTargets);
+				CReplyToCommand(client, "%s %t", TAG_COLOR, "Menu Sent", iTargets[i]);
+				LogAction(client, client, "\"%L\" printed the AdminRoom Menu to \"%L\".", client, iTargets[i]);
 			}
 			else
-				CReplyToCommand(client, "%s Unable to detect any admin room.", TAG_COLOR);
+				CReplyToCommand(client, "%s %t", TAG_COLOR, "No Admin Room");
 		}
 	}
 	else
-		CReplyToCommand(client, "%s Only one target can be reached.", TAG_COLOR);
+		CReplyToCommand(client, "%s %t", TAG_COLOR, "Only One Target");
 
 	return Plugin_Handled;
 }
@@ -299,8 +304,11 @@ void Menu_AdminRoom(int client)
 
 	menuHandle[client] = menu;
 
-	menu.SetTitle("Admin Room");
-	menu.AddItem("-1", "Get out (saved position)");
+	menu.SetTitle("%T", "Menu Title", client);
+
+	char sGetOut[64];
+	FormatEx(sGetOut, sizeof(sGetOut), "%T", "Menu Get Out", client);
+	menu.AddItem("-1", sGetOut);
 
 	ArrayList cAdminRoomLocations;
 	if (g_AdminRoom.GetAdminRoomLocations(cAdminRoomLocations) && cAdminRoomLocations.Length)
@@ -877,7 +885,7 @@ stock void GoToEntity(int client, CAdminRoomLocation cAdminRoomLocation)
 
 	TeleportEntity(client, entityposition, NULL_VECTOR, NULL_VECTOR);
 
-	CShowActivity2(client, "{green}[SM] {olive}", "{default}has been teleported to the adminroom.");
+	CShowActivity2(client, "{green}[SM] {olive}", "{default}%t", "Teleported To Admin Room");
 
 	LogAction(client, -1, "\"%L\" teleported himself to the adminroom.", client);
 
@@ -888,12 +896,12 @@ stock void GetOut(int client)
 {
 	if (g_fPlayerOrigin[client][0] == 0.0 && g_fPlayerOrigin[client][1] == 0.0 && g_fPlayerOrigin[client][2] == 0.0)
 	{
-		CPrintToChat(client, "%s Could not teleport you because your position was not saved.", TAG_COLOR);
+		CPrintToChat(client, "%s %t", TAG_COLOR, "Position Not Saved");
 		return;
 	}
 
 	TeleportEntity(client, g_fPlayerOrigin[client], NULL_VECTOR, NULL_VECTOR);
-	CPrintToChat(client, "%s You have left the admin room.", TAG_COLOR);
+	CPrintToChat(client, "%s %t", TAG_COLOR, "Left Admin Room");
 	LogAction(client, -1, "\"%L\" teleported himself OUT of the adminroom.", client);
 }
 

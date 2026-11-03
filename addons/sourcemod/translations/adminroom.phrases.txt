@@ -1,0 +1,177 @@
+"Phrases"
+{
+	"Configs Reloaded"
+	{
+		"en"		"AdminRoom configs reloaded."
+		"fr"		"Configs d'AdminRoom rechargées."
+		"ru"		"Конфиги AdminRoom перезагружены."
+		"es"		"Configuraciones de AdminRoom recargadas."
+		"de"		"AdminRoom-Konfigurationen neu geladen."
+		"pt"		"Configurações do AdminRoom recarregadas."
+		"chi"		"AdminRoom 配置已重新加载。"
+	}
+	"Map Not Supported"
+	{
+		"en"		"The current map is not supported."
+		"fr"		"La map actuelle n'est pas prise en charge."
+		"ru"		"Текущая карта не поддерживается."
+		"es"		"El mapa actual no es compatible."
+		"de"		"Die aktuelle Map wird nicht unterstützt."
+		"pt"		"O mapa atual não é suportado."
+		"chi"		"当前地图不受支持。"
+	}
+	"No Stages"
+	{
+		"en"		"The current map either does not have stages or is incorrectly configured."
+		"fr"		"La map actuelle n'a pas de stages ou est mal configurée."
+		"ru"		"У текущей карты нет этапов или она неправильно настроена."
+		"es"		"El mapa actual no tiene fases o está mal configurado."
+		"de"		"Die aktuelle Map hat keine Stages oder ist falsch konfiguriert."
+		"pt"		"O mapa atual não tem fases ou está configurado incorretamente."
+		"chi"		"当前地图没有关卡，或配置不正确。"
+	}
+	"Available Stages"
+	{
+		"en"		"Available stages:"
+		"fr"		"Stages disponibles :"
+		"ru"		"Доступные этапы:"
+		"es"		"Fases disponibles:"
+		"de"		"Verfügbare Stages:"
+		"pt"		"Fases disponíveis:"
+		"chi"		"可用关卡："
+	}
+	"Invalid Stage"
+	{
+		"#format"	"{1:s}"
+		"en"		"Invalid stage: {1}"
+		"fr"		"Stage invalide : {1}"
+		"ru"		"Неверный этап: {1}"
+		"es"		"Fase no válida: {1}"
+		"de"		"Ungültige Stage: {1}"
+		"pt"		"Fase inválida: {1}"
+		"chi"		"无效的关卡：{1}"
+	}
+	"Button Locked"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"Cannot set \"{olive}{1}{default}\": the button (#{2}) is locked."
+		"fr"		"Impossible de lancer \"{olive}{1}{default}\" : le bouton (#{2}) est verrouillé."
+		"ru"		"Не удалось включить \"{olive}{1}{default}\": кнопка (#{2}) заблокирована."
+		"es"		"No se puede activar \"{olive}{1}{default}\": el botón (#{2}) está bloqueado."
+		"de"		"\"{olive}{1}{default}\" kann nicht gesetzt werden: Der Button (#{2}) ist gesperrt."
+		"pt"		"Não é possível ativar \"{olive}{1}{default}\": o botão (#{2}) está travado."
+		"chi"		"无法设置 \"{olive}{1}{default}\"：按钮 (#{2}) 已锁定。"
+	}
+	"Stage Changed"
+	{
+		"#format"	"{1:s}"
+		"en"		"Changed the stage to {1}."
+		"fr"		"A changé le stage pour {1}."
+		"ru"		"Сменил этап на {1}."
+		"es"		"Cambió la fase a {1}."
+		"de"		"Hat die Stage auf {1} geändert."
+		"pt"		"Mudou a fase para {1}."
+		"chi"		"将关卡切换为 {1}。"
+	}
+	"Console Cannot Teleport"
+	{
+		"en"		"Console cannot be teleported."
+		"fr"		"La console ne peut pas être téléportée."
+		"ru"		"Консоль нельзя телепортировать."
+		"es"		"La consola no puede ser teletransportada."
+		"de"		"Die Konsole kann nicht teleportiert werden."
+		"pt"		"O console não pode ser teleportado."
+		"chi"		"控制台无法被传送。"
+	}
+	"AdminRoom Usage"
+	{
+		"en"		"Usage: sm_adminroom [#userid|name]"
+		"fr"		"Utilisation : sm_adminroom [#userid|nom]"
+		"ru"		"Использование: sm_adminroom [#userid|имя]"
+		"es"		"Uso: sm_adminroom [#userid|nombre]"
+		"de"		"Verwendung: sm_adminroom [#userid|Name]"
+		"pt"		"Uso: sm_adminroom [#userid|nome]"
+		"chi"		"用法：sm_adminroom [#userid|名字]"
+	}
+	"Menu Sent"
+	{
+		"#format"	"{1:N}"
+		"en"		"AdminRoom menu has been sent to {olive}{1}{default}."
+		"fr"		"Le menu AdminRoom a été envoyé à {olive}{1}{default}."
+		"ru"		"Меню AdminRoom отправлено игроку {olive}{1}{default}."
+		"es"		"El menú de AdminRoom se ha enviado a {olive}{1}{default}."
+		"de"		"Das AdminRoom-Menü wurde an {olive}{1}{default} gesendet."
+		"pt"		"O menu do AdminRoom foi enviado para {olive}{1}{default}."
+		"chi"		"已向 {olive}{1}{default} 发送 AdminRoom 菜单。"
+	}
+	"No Admin Room"
+	{
+		"en"		"Unable to detect any admin room."
+		"fr"		"Aucune admin room n'a été détectée."
+		"ru"		"Не удалось найти ни одной админ-комнаты."
+		"es"		"No se ha detectado ninguna sala de admin."
+		"de"		"Es wurde kein Adminraum gefunden."
+		"pt"		"Nenhuma sala de admin foi detectada."
+		"chi"		"未检测到任何管理员房间。"
+	}
+	"Only One Target"
+	{
+		"en"		"Only one target can be selected."
+		"fr"		"Une seule cible peut être choisie."
+		"ru"		"Можно выбрать только одну цель."
+		"es"		"Solo se puede elegir un objetivo."
+		"de"		"Es kann nur ein Ziel gewählt werden."
+		"pt"		"Só é possível escolher um alvo."
+		"chi"		"只能选择一个目标。"
+	}
+	"Menu Title"
+	{
+		"en"		"Admin Room"
+		"fr"		"Admin Room"
+		"ru"		"Админ-комната"
+		"es"		"Sala de admin"
+		"de"		"Adminraum"
+		"pt"		"Sala de admin"
+		"chi"		"管理员房间"
+	}
+	"Menu Get Out"
+	{
+		"en"		"Get out (saved position)"
+		"fr"		"Sortir (position sauvegardée)"
+		"ru"		"Выйти (сохранённая позиция)"
+		"es"		"Salir (posición guardada)"
+		"de"		"Verlassen (gespeicherte Position)"
+		"pt"		"Sair (posição salva)"
+		"chi"		"离开（返回保存的位置）"
+	}
+	"Teleported To Admin Room"
+	{
+		"en"		"Teleported to the admin room."
+		"fr"		"S'est téléporté dans l'admin room."
+		"ru"		"Телепортировался в админ-комнату."
+		"es"		"Se ha teletransportado a la sala de admin."
+		"de"		"Hat sich in den Adminraum teleportiert."
+		"pt"		"Teleportou-se para a sala de admin."
+		"chi"		"已传送到管理员房间。"
+	}
+	"Position Not Saved"
+	{
+		"en"		"Could not teleport you because your position was not saved."
+		"fr"		"Impossible de vous téléporter : votre position n'a pas été sauvegardée."
+		"ru"		"Не удалось телепортировать вас: ваша позиция не была сохранена."
+		"es"		"No se te pudo teletransportar porque tu posición no se guardó."
+		"de"		"Du konntest nicht teleportiert werden, weil deine Position nicht gespeichert wurde."
+		"pt"		"Não foi possível teleportar você porque sua posição não foi salva."
+		"chi"		"无法传送你，因为你的位置未被保存。"
+	}
+	"Left Admin Room"
+	{
+		"en"		"You have left the admin room."
+		"fr"		"Vous avez quitté l'admin room."
+		"ru"		"Вы покинули админ-комнату."
+		"es"		"Has salido de la sala de admin."
+		"de"		"Du hast den Adminraum verlassen."
+		"pt"		"Você saiu da sala de admin."
+		"chi"		"你已离开管理员房间。"
+	}
+}
