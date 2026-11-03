@@ -48,7 +48,7 @@ public Plugin myinfo =
 	name = "Admin Room",
 	author = "IT-KILLER, BotoX, maxime1907, .Rushaway",
 	description = "Teleport to admin rooms, change stages, and vote to replay a stage.",
-	version = "2.2.0",
+	version = "2.3.0",
 	url = ""
 };
 
