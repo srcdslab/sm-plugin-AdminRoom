@@ -11,6 +11,10 @@ Teleport to admin rooms, change stages, and vote to replay a stage.
   - sm_potcvote / sm_makovote are kept as aliases of sm_stagevote, so existing maps whose
     entities already call those commands (from sm-plugin-PotcVote / sm-plugin-MakoVote) keep
     working without changes.
+  - While the plugin an alias comes from is loaded (`MakoVote.smx` or
+    `VScript_ze_ffvii_mako_reactor_v5_3.smx` for sm_makovote, `PotcVote.smx` for sm_potcvote),
+    AdminRoom leaves that alias to it, so a map is never voted twice. sm_stagevote is always
+    handled by AdminRoom.
 
 ## Configuration
 
