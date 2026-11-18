@@ -212,7 +212,7 @@ public Action Command_Stage(int client, int argc)
 stock bool FindStageIndexByTrigger(const char[] sArg, int &index)
 {
 	ArrayList cStages;
-	if (!g_AdminRoom.bEnabled || !g_AdminRoom.GetStages(cStages))
+	if (g_AdminRoom == null || !g_AdminRoom.bEnabled || !g_AdminRoom.GetStages(cStages))
 		return false;
 
 	for (int i = 0; i < cStages.Length; i++)
@@ -293,7 +293,7 @@ stock bool FireActions(ArrayList cActions, int client, const char[] sContextName
 stock bool ChangeStageByIndex(int index, int client)
 {
 	ArrayList cStages;
-	if (!g_AdminRoom.bEnabled || !g_AdminRoom.GetStages(cStages) || index < 0 || index >= cStages.Length)
+	if (g_AdminRoom == null || !g_AdminRoom.bEnabled || !g_AdminRoom.GetStages(cStages) || index < 0 || index >= cStages.Length)
 		return false;
 
 	CStage cStage = cStages.Get(index);
@@ -341,45 +341,95 @@ stock bool ChangeStageByIndex(int index, int client)
 
 public Action Command_StageVote(int client, int argc)
 {
+	// sm_potcvote / sm_makovote are also registered by the plugins they come from. While one of
+	// them is loaded, it keeps the command: AdminRoom stays out so a map is never voted twice.
+	char sCommand[32];
+	GetCmdArg(0, sCommand, sizeof(sCommand));
+	if (IsLegacyVotePluginRunning(sCommand))
+		return Plugin_Continue;
+
 	CVoteConfig cVoteConfig;
-	if (!g_AdminRoom.bEnabled || !g_AdminRoom.GetVoteConfig(cVoteConfig) || !cVoteConfig.bEnabled)
+	if (!IsVoteConfigured(cVoteConfig))
 	{
 		if (client > 0)
-			CReplyToCommand(client, "%s Stage vote is not configured for this map.", TAG_COLOR);
+			CReplyToCommand(client, "%s %t", TAG_COLOR, "Vote Not Configured");
 		return Plugin_Handled;
 	}
 
 	if (!g_bVoteFinished)
 	{
 		if (client > 0)
-			CReplyToCommand(client, "%s A stage vote is already in progress.", TAG_COLOR);
+			CReplyToCommand(client, "%s %t", TAG_COLOR, "Vote In Progress");
 		return Plugin_Handled;
 	}
 
-	char sName[64];
-	if (client == 0)
-		strcopy(sName, sizeof(sName), "The server");
-	else if (!GetClientName(client, sName, sizeof(sName)))
-		FormatEx(sName, sizeof(sName), "Disconnected (uid:%d)", client);
-
 	if (client != 0)
 	{
-		CPrintToChatAll("%s {cyan}%s{default} has initiated a stage vote (in %.0f seconds).", TAG_COLOR, sName, cVoteConfig.fDelay);
+		char sName[64];
+		if (!GetClientName(client, sName, sizeof(sName)))
+			FormatEx(sName, sizeof(sName), "Disconnected (uid:%d)", client);
+
+		CPrintToChatAll("%s %t", TAG_COLOR, "Vote Initiated", sName, cVoteConfig.fDelay);
 		CreateTimer(cVoteConfig.fDelay, Timer_AdminStartVote, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
-		CPrintToChatAll("%s {cyan}%s{default} has initiated a stage vote (next round).", TAG_COLOR, sName);
+		CPrintToChatAll("%s %t", TAG_COLOR, "Vote Initiated Server");
 
 	Cmd_StartVote();
 
 	return Plugin_Handled;
 }
 
+// True when the current map has a "votes" block. Safe before the first map config is loaded.
+stock bool IsVoteConfigured(CVoteConfig &cVoteConfig)
+{
+	return g_AdminRoom != null && g_AdminRoom.bEnabled && g_AdminRoom.GetVoteConfig(cVoteConfig) && cVoteConfig.bEnabled;
+}
+
+// True when sCommand is a legacy alias and a plugin that registers it too is running:
+// - sm_makovote: sm-plugin-MakoVote, or sm-plugin-VScript-MakoReactor which embeds the same vote;
+// - sm_potcvote: sm-plugin-PotcVote.
+// The plugins are matched by file name, wherever they sit under plugins/.
+stock bool IsLegacyVotePluginRunning(const char[] sCommand)
+{
+	bool bMako = strcmp(sCommand, "sm_makovote", false) == 0;
+	bool bPotc = strcmp(sCommand, "sm_potcvote", false) == 0;
+	if (!bMako && !bPotc)
+		return false;
+
+	Handle hMyself = GetMyHandle();
+	bool bFound = false;
+
+	PluginIterator iter = new PluginIterator();
+	while (!bFound && iter.Next())
+	{
+		Handle hPlugin = iter.Plugin;
+		if (hPlugin == hMyself || GetPluginStatus(hPlugin) != Plugin_Running)
+			continue;
+
+		char sFile[PLATFORM_MAX_PATH];
+		GetPluginFilename(hPlugin, sFile, sizeof(sFile));
+
+		int iStart = FindCharInString(sFile, '/', true) + 1;
+		int iBackslash = FindCharInString(sFile, '\\', true) + 1;
+		if (iBackslash > iStart)
+			iStart = iBackslash;
+
+		if (bMako)
+			bFound = strcmp(sFile[iStart], "MakoVote.smx", false) == 0 || strcmp(sFile[iStart], "VScript_ze_ffvii_mako_reactor_v5_3.smx", false) == 0;
+		else
+			bFound = strcmp(sFile[iStart], "PotcVote.smx", false) == 0;
+	}
+	delete iter;
+
+	return bFound;
+}
+
 // Ends the round once the configured delay has passed after an admin started the vote, so the
 // vote opens at the start of the next round (MakoVote's AdminStartVote_Timer).
 public Action Timer_AdminStartVote(Handle timer)
 {
-	CPrintToChatAll("%s Restarting round, be ready to vote.", TAG_COLOR);
+	CPrintToChatAll("%s %t", TAG_COLOR, "Vote Restarting Round");
 	TerminateVoteRound(1.5);
 	return Plugin_Stop;
 }
@@ -526,7 +576,7 @@ bool TryRollRtdStage()
 		char sName[64];
 		cStage.GetName(sName, sizeof(sName));
 
-		CPrintToChatAll("%s Rolling the dice... Result: {green}%s{default}!", TAG_COLOR, sName);
+		CPrintToChatAll("%s %t", TAG_COLOR, "Vote Rolling Dice", sName);
 
 		if (i < g_cStagePlayed.Length)
 			g_cStagePlayed.Set(i, 1);
@@ -543,7 +593,7 @@ bool TryRollRtdStage()
 
 public Action Timer_VoteCountdown(Handle timer)
 {
-	PrintCenterTextAll("[AdminRoom] Starting stage vote in %ds", g_iVoteCountdown);
+	PrintCenterTextAll("%t", "Vote Countdown", g_iVoteCountdown);
 
 	if (g_iVoteCountdown-- <= 0)
 	{
@@ -566,7 +616,7 @@ void InitiateStageVote()
 {
 	if (IsVoteInProgress())
 	{
-		CPrintToChatAll("%s Another vote is currently in progress, retrying in 5 seconds.", TAG_COLOR);
+		CPrintToChatAll("%s %t", TAG_COLOR, "Vote Retry");
 		delete g_hVoteCountdownTimer;
 		g_hVoteCountdownTimer = CreateTimer(5.0, Timer_RetryStageVote, _, TIMER_FLAG_NO_MAPCHANGE);
 		return;
@@ -598,15 +648,23 @@ void InitiateStageVote()
 		menu.AddItem(sInfo, sName, bOnCooldown ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	}
 
-	menu.OptionFlags = MENU_NO_PAGINATION;
-	menu.SetTitle("What stage to play next?");
+	// One page when every stage fits on it (keys 1-9); past that, keep the pages so no stage is dropped.
+	if (menu.ItemCount <= 9)
+		menu.Pagination = MENU_NO_PAGINATION;
+	menu.SetTitle("Vote Menu Title"); // translated per player in MenuAction_Display
 	menu.VoteResultCallback = Handler_StageVoteFinished;
 	menu.DisplayVoteToAll(15);
 }
 
 public int Handler_StageVoteMenu(Menu menu, MenuAction action, int param1, int param2)
 {
-	if (action == MenuAction_End)
+	if (action == MenuAction_Display)
+	{
+		char sTitle[128];
+		FormatEx(sTitle, sizeof(sTitle), "%T", "Vote Menu Title", param1);
+		view_as<Panel>(param2).SetTitle(sTitle);
+	}
+	else if (action == MenuAction_End)
 	{
 		delete menu;
 
@@ -629,7 +687,7 @@ public void Handler_StageVoteFinished(Menu menu, int num_votes, int num_clients,
 
 	if (num_items > 1 && iHighestVotes < iRequiredVotes && !g_bIsRevote)
 	{
-		CPrintToChatAll("%s A revote is needed!", TAG_COLOR);
+		CPrintToChatAll("%s %t", TAG_COLOR, "Vote Revote");
 
 		char sFirst[16], sSecond[16];
 		menu.GetItem(item_info[0][VOTEINFO_ITEM_INDEX], sFirst, sizeof(sFirst));
@@ -669,7 +727,7 @@ void FinishStageVote(Menu menu, const int[][] item_info)
 	char sName[64];
 	cStage.GetName(sName, sizeof(sName));
 
-	CPrintToChatAll("%s Vote Finished! Moving to {green}%s{default}.", TAG_COLOR, sName);
+	CPrintToChatAll("%s %t", TAG_COLOR, "Vote Finished", sName);
 
 	if (iWinnerStage < g_cStagePlayed.Length)
 		g_cStagePlayed.Set(iWinnerStage, 1);
@@ -696,13 +754,13 @@ stock void TerminateVoteRound(float delay)
 
 public int Native_AdminRoom_IsEnabled(Handle plugin, int numParams)
 {
-	return g_AdminRoom.bEnabled;
+	return g_AdminRoom != null && g_AdminRoom.bEnabled;
 }
 
 public int Native_AdminRoom_GetStageCount(Handle plugin, int numParams)
 {
 	ArrayList cStages;
-	if (!g_AdminRoom.GetStages(cStages))
+	if (g_AdminRoom == null || !g_AdminRoom.GetStages(cStages))
 		return 0;
 
 	return cStages.Length;
@@ -714,7 +772,7 @@ public int Native_AdminRoom_GetStageName(Handle plugin, int numParams)
 	int maxlen = GetNativeCell(3);
 
 	ArrayList cStages;
-	if (!g_AdminRoom.GetStages(cStages) || index < 0 || index >= cStages.Length || maxlen <= 0)
+	if (g_AdminRoom == null || !g_AdminRoom.GetStages(cStages) || index < 0 || index >= cStages.Length || maxlen <= 0)
 		return false;
 
 	CStage cStage = cStages.Get(index);
