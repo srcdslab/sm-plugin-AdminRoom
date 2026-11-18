@@ -533,7 +533,7 @@ void StartVoteCountdown()
 
 	ArrayList cOnStartActions;
 	if (cVoteConfig.GetOnStartActions(cOnStartActions))
-		FireActions(cOnStartActions, 0);
+		FireActions(cOnStartActions, 0, "Stage vote");
 
 	RestartVoteCountdown();
 }
@@ -752,6 +752,14 @@ stock void TerminateVoteRound(float delay)
 ======================================================================================================
 */
 
+// The client is used to fire the stage actions, in the activity message and in the log:
+// fail before any action fires rather than halfway through.
+stock void ValidateNativeClient(int client)
+{
+	if (client != 0 && (client < 1 || client > MaxClients || !IsClientInGame(client)))
+		ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d (use 0 for the server)", client);
+}
+
 public int Native_AdminRoom_IsEnabled(Handle plugin, int numParams)
 {
 	return g_AdminRoom != null && g_AdminRoom.bEnabled;
@@ -793,6 +801,7 @@ public int Native_AdminRoom_SetStage(Handle plugin, int numParams)
 {
 	int index = GetNativeCell(1);
 	int client = GetNativeCell(2);
+	ValidateNativeClient(client);
 
 	return ChangeStageByIndex(index, client);
 }
@@ -800,6 +809,7 @@ public int Native_AdminRoom_SetStage(Handle plugin, int numParams)
 public int Native_AdminRoom_SetStageByTrigger(Handle plugin, int numParams)
 {
 	int client = GetNativeCell(2);
+	ValidateNativeClient(client);
 
 	int len;
 	GetNativeStringLength(1, len);
