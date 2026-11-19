@@ -9,6 +9,12 @@
 		"de"		"AdminRoom-Konfigurationen neu geladen."
 		"pt"		"Configurações do AdminRoom recarregadas."
 		"chi"		"AdminRoom 配置已重新加载。"
+		"pl"		"Konfiguracje AdminRoom zostały przeładowane."
+		"tr"		"AdminRoom yapılandırmaları yeniden yüklendi."
+		"it"		"Configurazioni di AdminRoom ricaricate."
+		"ua"		"Конфігурації AdminRoom перезавантажено."
+		"zho"		"AdminRoom 設定已重新載入。"
+		"cze"		"Konfigurace AdminRoom byly znovu načteny."
 	}
 	"Map Not Supported"
 	{
@@ -19,6 +25,12 @@
 		"de"		"Die aktuelle Map wird nicht unterstützt."
 		"pt"		"O mapa atual não é suportado."
 		"chi"		"当前地图不受支持。"
+		"pl"		"Obecna mapa nie jest obsługiwana."
+		"tr"		"Mevcut harita desteklenmiyor."
+		"it"		"La mappa attuale non è supportata."
+		"ua"		"Поточна мапа не підтримується."
+		"zho"		"目前的地圖不受支援。"
+		"cze"		"Aktuální mapa není podporována."
 	}
 	"No Stages"
 	{
@@ -29,6 +41,12 @@
 		"de"		"Die aktuelle Map hat keine Stages oder ist falsch konfiguriert."
 		"pt"		"O mapa atual não tem fases ou está configurado incorretamente."
 		"chi"		"当前地图没有关卡，或配置不正确。"
+		"pl"		"Obecna mapa nie ma etapów lub jest źle skonfigurowana."
+		"tr"		"Mevcut haritada aşama yok veya yanlış yapılandırılmış."
+		"it"		"La mappa attuale non ha fasi o è configurata in modo errato."
+		"ua"		"Поточна мапа не має етапів або налаштована неправильно."
+		"zho"		"目前的地圖沒有關卡，或設定不正確。"
+		"cze"		"Aktuální mapa nemá žádné etapy nebo je špatně nakonfigurována."
 	}
 	"Available Stages"
 	{
@@ -39,6 +57,12 @@
 		"de"		"Verfügbare Stages:"
 		"pt"		"Fases disponíveis:"
 		"chi"		"可用关卡："
+		"pl"		"Dostępne etapy:"
+		"tr"		"Mevcut aşamalar:"
+		"it"		"Fasi disponibili:"
+		"ua"		"Доступні етапи:"
+		"zho"		"可用關卡："
+		"cze"		"Dostupné etapy:"
 	}
 	"Invalid Stage"
 	{
@@ -50,6 +74,12 @@
 		"de"		"Ungültige Stage: {1}"
 		"pt"		"Fase inválida: {1}"
 		"chi"		"无效的关卡：{1}"
+		"pl"		"Nieprawidłowy etap: {1}"
+		"tr"		"Geçersiz aşama: {1}"
+		"it"		"Fase non valida: {1}"
+		"ua"		"Недійсний етап: {1}"
+		"zho"		"無效的關卡：{1}"
+		"cze"		"Neplatná etapa: {1}"
 	}
 	"Button Locked"
 	{
@@ -61,6 +91,12 @@
 		"de"		"\"{olive}{1}{default}\" kann nicht gesetzt werden: Der Button (#{2}) ist gesperrt."
 		"pt"		"Não é possível ativar \"{olive}{1}{default}\": o botão (#{2}) está travado."
 		"chi"		"无法设置 \"{olive}{1}{default}\"：按钮 (#{2}) 已锁定。"
+		"pl"		"Nie można ustawić \"{olive}{1}{default}\": przycisk (#{2}) jest zablokowany."
+		"tr"		"\"{olive}{1}{default}\" ayarlanamıyor: düğme (#{2}) kilitli."
+		"it"		"Impossibile impostare \"{olive}{1}{default}\": il pulsante (#{2}) è bloccato."
+		"ua"		"Не вдалося встановити \"{olive}{1}{default}\": кнопку (#{2}) заблоковано."
+		"zho"		"無法設定 \"{olive}{1}{default}\"：按鈕 (#{2}) 已鎖定。"
+		"cze"		"Nelze nastavit \"{olive}{1}{default}\": tlačítko (#{2}) je zamčené."
 	}
 	"Stage Changed"
 	{
@@ -72,6 +108,12 @@
 		"de"		"Hat die Stage auf {1} geändert."
 		"pt"		"Mudou a fase para {1}."
 		"chi"		"将关卡切换为 {1}。"
+		"pl"		"Zmieniono etap na {1}."
+		"tr"		"Aşamayı {1} olarak değiştirdi."
+		"it"		"Ha cambiato la fase in {1}."
+		"ua"		"Змінив етап на {1}."
+		"zho"		"將關卡切換為 {1}。"
+		"cze"		"Změnil etapu na {1}."
 	}
 	"Console Cannot Teleport"
 	{
@@ -82,6 +124,12 @@
 		"de"		"Die Konsole kann nicht teleportiert werden."
 		"pt"		"O console não pode ser teleportado."
 		"chi"		"控制台无法被传送。"
+		"pl"		"Konsola nie może zostać teleportowana."
+		"tr"		"Konsol ışınlanamaz."
+		"it"		"La console non può essere teletrasportata."
+		"ua"		"Консоль не можна телепортувати."
+		"zho"		"主控台無法被傳送。"
+		"cze"		"Konzole nemůže být teleportována."
 	}
 	"AdminRoom Usage"
 	{
@@ -92,6 +140,12 @@
 		"de"		"Verwendung: sm_adminroom [#userid|Name]"
 		"pt"		"Uso: sm_adminroom [#userid|nome]"
 		"chi"		"用法：sm_adminroom [#userid|名字]"
+		"pl"		"Użycie: sm_adminroom [#userid|nazwa]"
+		"tr"		"Kullanım: sm_adminroom [#userid|isim]"
+		"it"		"Uso: sm_adminroom [#userid|nome]"
+		"ua"		"Використання: sm_adminroom [#userid|ім'я]"
+		"zho"		"用法：sm_adminroom [#userid|名稱]"
+		"cze"		"Použití: sm_adminroom [#userid|jméno]"
 	}
 	"Menu Sent"
 	{
@@ -103,6 +157,12 @@
 		"de"		"Das AdminRoom-Menü wurde an {olive}{1}{default} gesendet."
 		"pt"		"O menu do AdminRoom foi enviado para {olive}{1}{default}."
 		"chi"		"已向 {olive}{1}{default} 发送 AdminRoom 菜单。"
+		"pl"		"Menu AdminRoom zostało wysłane do {olive}{1}{default}."
+		"tr"		"AdminRoom menüsü {olive}{1}{default} oyuncusuna gönderildi."
+		"it"		"Il menu di AdminRoom è stato inviato a {olive}{1}{default}."
+		"ua"		"Меню AdminRoom надіслано гравцю {olive}{1}{default}."
+		"zho"		"已向 {olive}{1}{default} 發送 AdminRoom 選單。"
+		"cze"		"Nabídka AdminRoom byla odeslána hráči {olive}{1}{default}."
 	}
 	"No Admin Room"
 	{
@@ -113,6 +173,12 @@
 		"de"		"Es wurde kein Adminraum gefunden."
 		"pt"		"Nenhuma sala de admin foi detectada."
 		"chi"		"未检测到任何管理员房间。"
+		"pl"		"Nie udało się wykryć żadnego pokoju admina."
+		"tr"		"Hiçbir admin odası tespit edilemedi."
+		"it"		"Impossibile rilevare alcuna stanza admin."
+		"ua"		"Не вдалося виявити жодної кімнати адміна."
+		"zho"		"未偵測到任何管理員房間。"
+		"cze"		"Nepodařilo se zjistit žádnou admin místnost."
 	}
 	"Only One Target"
 	{
@@ -123,6 +189,12 @@
 		"de"		"Es kann nur ein Ziel gewählt werden."
 		"pt"		"Só é possível escolher um alvo."
 		"chi"		"只能选择一个目标。"
+		"pl"		"Można wybrać tylko jeden cel."
+		"tr"		"Yalnızca bir hedef seçilebilir."
+		"it"		"È possibile selezionare un solo bersaglio."
+		"ua"		"Можна вибрати лише одну ціль."
+		"zho"		"只能選擇一個目標。"
+		"cze"		"Lze vybrat pouze jeden cíl."
 	}
 	"Menu Title"
 	{
@@ -133,6 +205,12 @@
 		"de"		"Adminraum"
 		"pt"		"Sala de admin"
 		"chi"		"管理员房间"
+		"pl"		"Pokój admina"
+		"tr"		"Admin Odası"
+		"it"		"Stanza admin"
+		"ua"		"Кімната адміна"
+		"zho"		"管理員房間"
+		"cze"		"Admin místnost"
 	}
 	"Menu Get Out"
 	{
@@ -143,6 +221,12 @@
 		"de"		"Verlassen (gespeicherte Position)"
 		"pt"		"Sair (posição salva)"
 		"chi"		"离开（返回保存的位置）"
+		"pl"		"Wyjdź (zapisana pozycja)"
+		"tr"		"Çık (kayıtlı konum)"
+		"it"		"Esci (posizione salvata)"
+		"ua"		"Вийти (збережена позиція)"
+		"zho"		"離開（返回儲存的位置）"
+		"cze"		"Odejít (uložená pozice)"
 	}
 	"Teleported To Admin Room"
 	{
@@ -153,6 +237,12 @@
 		"de"		"Hat sich in den Adminraum teleportiert."
 		"pt"		"Teleportou-se para a sala de admin."
 		"chi"		"已传送到管理员房间。"
+		"pl"		"Teleportował się do pokoju admina."
+		"tr"		"Admin odasına ışınlandı."
+		"it"		"Si è teletrasportato nella stanza admin."
+		"ua"		"Телепортувався до кімнати адміна."
+		"zho"		"已傳送到管理員房間。"
+		"cze"		"Teleportoval se do admin místnosti."
 	}
 	"Position Not Saved"
 	{
@@ -163,6 +253,12 @@
 		"de"		"Du konntest nicht teleportiert werden, weil deine Position nicht gespeichert wurde."
 		"pt"		"Não foi possível teleportar você porque sua posição não foi salva."
 		"chi"		"无法传送你，因为你的位置未被保存。"
+		"pl"		"Nie udało się cię teleportować, ponieważ twoja pozycja nie została zapisana."
+		"tr"		"Konumun kaydedilmediği için ışınlanamadın."
+		"it"		"Non è stato possibile teletrasportarti perché la tua posizione non è stata salvata."
+		"ua"		"Не вдалося телепортувати вас: вашу позицію не було збережено."
+		"zho"		"無法傳送你，因為你的位置未被儲存。"
+		"cze"		"Nepodařilo se tě teleportovat, protože tvá pozice nebyla uložena."
 	}
 	"Left Admin Room"
 	{
@@ -173,6 +269,12 @@
 		"de"		"Du hast den Adminraum verlassen."
 		"pt"		"Você saiu da sala de admin."
 		"chi"		"你已离开管理员房间。"
+		"pl"		"Opuściłeś pokój admina."
+		"tr"		"Admin odasından ayrıldın."
+		"it"		"Hai lasciato la stanza admin."
+		"ua"		"Ви покинули кімнату адміна."
+		"zho"		"你已離開管理員房間。"
+		"cze"		"Opustil jsi admin místnost."
 	}
 	"Vote Not Configured"
 	{
@@ -183,6 +285,12 @@
 		"de"		"Die Stage-Abstimmung ist für diese Map nicht eingerichtet."
 		"pt"		"A votação de fase não está configurada para este mapa."
 		"chi"		"此地图未配置关卡投票。"
+		"pl"		"Głosowanie na etap nie jest skonfigurowane dla tej mapy."
+		"tr"		"Bu harita için aşama oylaması yapılandırılmamış."
+		"it"		"La votazione delle fasi non è configurata per questa mappa."
+		"ua"		"Голосування за етап не налаштовано для цієї мапи."
+		"zho"		"此地圖未設定關卡投票。"
+		"cze"		"Hlasování o etapě není pro tuto mapu nakonfigurováno."
 	}
 	"Vote In Progress"
 	{
@@ -193,6 +301,12 @@
 		"de"		"Eine Stage-Abstimmung läuft bereits."
 		"pt"		"Já há uma votação de fase em andamento."
 		"chi"		"关卡投票已在进行中。"
+		"pl"		"Głosowanie na etap już trwa."
+		"tr"		"Bir aşama oylaması zaten devam ediyor."
+		"it"		"Una votazione delle fasi è già in corso."
+		"ua"		"Голосування за етап уже триває."
+		"zho"		"關卡投票已在進行中。"
+		"cze"		"Hlasování o etapě už probíhá."
 	}
 	"Vote Initiated"
 	{
@@ -204,6 +318,12 @@
 		"de"		"{cyan}{1}{default} hat eine Stage-Abstimmung gestartet (in {2} Sekunden)."
 		"pt"		"{cyan}{1}{default} iniciou uma votação de fase (em {2} segundos)."
 		"chi"		"{cyan}{1}{default} 发起了关卡投票（{2} 秒后开始）。"
+		"pl"		"{cyan}{1}{default} rozpoczął głosowanie na etap (za {2} sek.)."
+		"tr"		"{cyan}{1}{default} bir aşama oylaması başlattı ({2} saniye sonra)."
+		"it"		"{cyan}{1}{default} ha avviato una votazione delle fasi (tra {2} secondi)."
+		"ua"		"{cyan}{1}{default} розпочав голосування за етап (через {2} сек.)."
+		"zho"		"{cyan}{1}{default} 發起了關卡投票（{2} 秒後開始）。"
+		"cze"		"{cyan}{1}{default} zahájil hlasování o etapě (za {2} sekund)."
 	}
 	"Vote Initiated Server"
 	{
@@ -214,6 +334,12 @@
 		"de"		"{cyan}Der Server{default} hat eine Stage-Abstimmung gestartet (nächste Runde)."
 		"pt"		"{cyan}O servidor{default} iniciou uma votação de fase (próxima rodada)."
 		"chi"		"{cyan}服务器{default} 发起了关卡投票（下一回合）。"
+		"pl"		"{cyan}Serwer{default} rozpoczął głosowanie na etap (następna runda)."
+		"tr"		"{cyan}Sunucu{default} bir aşama oylaması başlattı (sonraki raunt)."
+		"it"		"{cyan}Il server{default} ha avviato una votazione delle fasi (prossimo round)."
+		"ua"		"{cyan}Сервер{default} розпочав голосування за етап (наступний раунд)."
+		"zho"		"{cyan}伺服器{default} 發起了關卡投票（下一回合）。"
+		"cze"		"{cyan}Server{default} zahájil hlasování o etapě (další kolo)."
 	}
 	"Vote Restarting Round"
 	{
@@ -224,6 +350,12 @@
 		"de"		"Die Runde wird neu gestartet, macht euch bereit abzustimmen."
 		"pt"		"Reiniciando a rodada, prepare-se para votar."
 		"chi"		"正在重新开始回合，请准备投票。"
+		"pl"		"Restartowanie rundy, bądźcie gotowi do głosowania."
+		"tr"		"Raunt yeniden başlatılıyor, oy vermeye hazır olun."
+		"it"		"Riavvio del round, preparatevi a votare."
+		"ua"		"Перезапуск раунду, приготуйтеся голосувати."
+		"zho"		"正在重新開始回合，請準備投票。"
+		"cze"		"Restartuji kolo, připravte se na hlasování."
 	}
 	"Vote Rolling Dice"
 	{
@@ -235,6 +367,12 @@
 		"de"		"Die Würfel rollen... Ergebnis: {green}{1}{default}!"
 		"pt"		"Rolando os dados... Resultado: {green}{1}{default}!"
 		"chi"		"掷骰子中……结果：{green}{1}{default}！"
+		"pl"		"Rzucamy kośćmi... Wynik: {green}{1}{default}!"
+		"tr"		"Zarlar atılıyor... Sonuç: {green}{1}{default}!"
+		"it"		"Lancio i dadi... Risultato: {green}{1}{default}!"
+		"ua"		"Кидаємо кубики... Результат: {green}{1}{default}!"
+		"zho"		"擲骰子中……結果：{green}{1}{default}！"
+		"cze"		"Hážeme kostkou... Výsledek: {green}{1}{default}!"
 	}
 	"Vote Countdown"
 	{
@@ -246,6 +384,12 @@
 		"de"		"[AdminRoom] Stage-Abstimmung in {1} s"
 		"pt"		"[AdminRoom] Votação de fase em {1} s"
 		"chi"		"[AdminRoom] 关卡投票将在 {1} 秒后开始"
+		"pl"		"[AdminRoom] Głosowanie na etap za {1} s"
+		"tr"		"[AdminRoom] Aşama oylaması {1} sn sonra başlıyor"
+		"it"		"[AdminRoom] Votazione delle fasi tra {1} s"
+		"ua"		"[AdminRoom] Голосування за етап через {1} с"
+		"zho"		"[AdminRoom] 關卡投票將在 {1} 秒後開始"
+		"cze"		"[AdminRoom] Hlasování o etapě za {1} s"
 	}
 	"Vote Retry"
 	{
@@ -256,6 +400,12 @@
 		"de"		"Eine andere Abstimmung läuft gerade, neuer Versuch in 5 Sekunden."
 		"pt"		"Outra votação está em andamento, nova tentativa em 5 segundos."
 		"chi"		"当前有其他投票正在进行，5 秒后重试。"
+		"pl"		"Trwa inne głosowanie, ponowna próba za 5 sekund."
+		"tr"		"Şu anda başka bir oylama devam ediyor, 5 saniye sonra tekrar denenecek."
+		"it"		"È in corso un'altra votazione, nuovo tentativo tra 5 secondi."
+		"ua"		"Зараз триває інше голосування, повторна спроба через 5 секунд."
+		"zho"		"目前有其他投票正在進行，5 秒後重試。"
+		"cze"		"Právě probíhá jiné hlasování, nový pokus za 5 sekund."
 	}
 	"Vote Menu Title"
 	{
@@ -266,6 +416,12 @@
 		"de"		"Welche Stage als Nächstes?"
 		"pt"		"Qual fase jogar a seguir?"
 		"chi"		"下一关玩哪个？"
+		"pl"		"Który etap grać dalej?"
+		"tr"		"Sıradaki aşama hangisi olsun?"
+		"it"		"Quale fase giocare dopo?"
+		"ua"		"Який етап грати далі?"
+		"zho"		"下一關玩哪個？"
+		"cze"		"Kterou etapu hrát dál?"
 	}
 	"Vote Revote"
 	{
@@ -276,6 +432,12 @@
 		"de"		"Eine Stichwahl ist nötig!"
 		"pt"		"É preciso votar de novo!"
 		"chi"		"需要重新投票！"
+		"pl"		"Potrzebne jest ponowne głosowanie!"
+		"tr"		"Yeniden oylama gerekli!"
+		"it"		"Serve una nuova votazione!"
+		"ua"		"Потрібне повторне голосування!"
+		"zho"		"需要重新投票！"
+		"cze"		"Je potřeba nové hlasování!"
 	}
 	"Vote Finished"
 	{
@@ -287,5 +449,11 @@
 		"de"		"Abstimmung beendet! Weiter mit {green}{1}{default}."
 		"pt"		"Votação encerrada! Indo para {green}{1}{default}."
 		"chi"		"投票结束！即将进入 {green}{1}{default}。"
+		"pl"		"Głosowanie zakończone! Przechodzimy do {green}{1}{default}."
+		"tr"		"Oylama bitti! {green}{1}{default} aşamasına geçiliyor."
+		"it"		"Votazione terminata! Si passa a {green}{1}{default}."
+		"ua"		"Голосування завершено! Переходимо до {green}{1}{default}."
+		"zho"		"投票結束！即將進入 {green}{1}{default}。"
+		"cze"		"Hlasování skončilo! Přecházíme na {green}{1}{default}."
 	}
 }
